@@ -10,33 +10,154 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as ProgrammaRouteImport } from './routes/programma'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as AfleveringenIndexRouteImport } from './routes/afleveringen.index'
+import { Route as AfleveringenSlugRouteImport } from './routes/afleveringen.$slug'
+import { Route as ThemasIndexRouteImport } from './routes/themas.index'
+import { Route as ThemasSlugRouteImport } from './routes/themas.$slug'
+import { Route as VerhalenIndexRouteImport } from './routes/verhalen.index'
+import { Route as VerhalenSlugRouteImport } from './routes/verhalen.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgrammaRoute = ProgrammaRouteImport.update({
+  id: '/programma',
+  path: '/programma',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AfleveringenIndexRoute = AfleveringenIndexRouteImport.update({
+  id: '/afleveringen/',
+  path: '/afleveringen/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AfleveringenSlugRoute = AfleveringenSlugRouteImport.update({
+  id: '/afleveringen/$slug',
+  path: '/afleveringen/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThemasIndexRoute = ThemasIndexRouteImport.update({
+  id: '/themas/',
+  path: '/themas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThemasSlugRoute = ThemasSlugRouteImport.update({
+  id: '/themas/$slug',
+  path: '/themas/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerhalenIndexRoute = VerhalenIndexRouteImport.update({
+  id: '/verhalen/',
+  path: '/verhalen/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerhalenSlugRoute = VerhalenSlugRouteImport.update({
+  id: '/verhalen/$slug',
+  path: '/verhalen/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/programma': typeof ProgrammaRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/afleveringen/$slug': typeof AfleveringenSlugRoute
+  '/themas/$slug': typeof ThemasSlugRoute
+  '/verhalen/$slug': typeof VerhalenSlugRoute
+  '/afleveringen/': typeof AfleveringenIndexRoute
+  '/themas/': typeof ThemasIndexRoute
+  '/verhalen/': typeof VerhalenIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/programma': typeof ProgrammaRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/afleveringen/$slug': typeof AfleveringenSlugRoute
+  '/themas/$slug': typeof ThemasSlugRoute
+  '/verhalen/$slug': typeof VerhalenSlugRoute
+  '/afleveringen': typeof AfleveringenIndexRoute
+  '/themas': typeof ThemasIndexRoute
+  '/verhalen': typeof VerhalenIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/programma': typeof ProgrammaRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/afleveringen/$slug': typeof AfleveringenSlugRoute
+  '/themas/$slug': typeof ThemasSlugRoute
+  '/verhalen/$slug': typeof VerhalenSlugRoute
+  '/afleveringen/': typeof AfleveringenIndexRoute
+  '/themas/': typeof ThemasIndexRoute
+  '/verhalen/': typeof VerhalenIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/contact'
+    | '/programma'
+    | '/sitemap.xml'
+    | '/afleveringen/$slug'
+    | '/themas/$slug'
+    | '/verhalen/$slug'
+    | '/afleveringen/'
+    | '/themas/'
+    | '/verhalen/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/contact'
+    | '/programma'
+    | '/sitemap.xml'
+    | '/afleveringen/$slug'
+    | '/themas/$slug'
+    | '/verhalen/$slug'
+    | '/afleveringen'
+    | '/themas'
+    | '/verhalen'
+  id:
+    | '__root__'
+    | '/'
+    | '/contact'
+    | '/programma'
+    | '/sitemap.xml'
+    | '/afleveringen/$slug'
+    | '/themas/$slug'
+    | '/verhalen/$slug'
+    | '/afleveringen/'
+    | '/themas/'
+    | '/verhalen/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactRoute: typeof ContactRoute
+  ProgrammaRoute: typeof ProgrammaRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AfleveringenSlugRoute: typeof AfleveringenSlugRoute
+  ThemasSlugRoute: typeof ThemasSlugRoute
+  VerhalenSlugRoute: typeof VerhalenSlugRoute
+  AfleveringenIndexRoute: typeof AfleveringenIndexRoute
+  ThemasIndexRoute: typeof ThemasIndexRoute
+  VerhalenIndexRoute: typeof VerhalenIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +169,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programma': {
+      id: '/programma'
+      path: '/programma'
+      fullPath: '/programma'
+      preLoaderRoute: typeof ProgrammaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/afleveringen/': {
+      id: '/afleveringen/'
+      path: '/afleveringen'
+      fullPath: '/afleveringen/'
+      preLoaderRoute: typeof AfleveringenIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/afleveringen/$slug': {
+      id: '/afleveringen/$slug'
+      path: '/afleveringen/$slug'
+      fullPath: '/afleveringen/$slug'
+      preLoaderRoute: typeof AfleveringenSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/themas/': {
+      id: '/themas/'
+      path: '/themas'
+      fullPath: '/themas/'
+      preLoaderRoute: typeof ThemasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/themas/$slug': {
+      id: '/themas/$slug'
+      path: '/themas/$slug'
+      fullPath: '/themas/$slug'
+      preLoaderRoute: typeof ThemasSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verhalen/': {
+      id: '/verhalen/'
+      path: '/verhalen'
+      fullPath: '/verhalen/'
+      preLoaderRoute: typeof VerhalenIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verhalen/$slug': {
+      id: '/verhalen/$slug'
+      path: '/verhalen/$slug'
+      fullPath: '/verhalen/$slug'
+      preLoaderRoute: typeof VerhalenSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactRoute: ContactRoute,
+  ProgrammaRoute: ProgrammaRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AfleveringenSlugRoute: AfleveringenSlugRoute,
+  ThemasSlugRoute: ThemasSlugRoute,
+  VerhalenSlugRoute: VerhalenSlugRoute,
+  AfleveringenIndexRoute: AfleveringenIndexRoute,
+  ThemasIndexRoute: ThemasIndexRoute,
+  VerhalenIndexRoute: VerhalenIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
