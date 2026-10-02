@@ -39,6 +39,7 @@ export function Header() {
   }, [open]);
 
   return (
+    <>
     <header className={cn("fixed inset-x-0 top-0 z-50 border-b transition-colors duration-500", scrolled ? "border-border bg-background/90 backdrop-blur" : "border-transparent")}>
       <div className="container-x flex h-20 items-center justify-between gap-6">
         <Logo />
@@ -76,9 +77,10 @@ export function Header() {
           </button>
         </div>
       </div>
+    </header>
 
       {open && (
-        <div role="dialog" aria-modal="true" aria-label="Menu" className="page-fade fixed inset-0 z-50 overflow-y-auto bg-background lg:hidden">
+        <div role="dialog" aria-modal="true" aria-label="Menu" className="page-fade fixed inset-0 z-[70] overflow-y-auto bg-background lg:hidden">
           <div className="container-x flex h-20 items-center justify-between">
             <Logo />
             <button ref={closeRef} type="button" onClick={() => setOpen(false)} className="p-2 text-sm uppercase tracking-[0.2em]" aria-label="Menu sluiten">Sluiten ✕</button>
@@ -102,6 +104,6 @@ export function Header() {
           </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }
