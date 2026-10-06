@@ -4,7 +4,7 @@ import { btn } from "@/components/site/ui";
 import { meta } from "@/lib/meta";
 
 export const Route = createFileRoute("/app")({
-  head: () => ({ meta: meta("App", "De app van Pilot België: nieuws, video en tv-gids onderweg.") }),
+  head: () => ({ meta: meta("App", "De app van OndernemersTV Vlaanderen: nieuws, video en tv-gids onderweg.") }),
   component: AppPage,
 });
 

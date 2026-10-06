@@ -42,7 +42,7 @@ function Nieuws() {
                 )}
               </>
             ) : (
-              <EmptyState title="Geen resultaten">Pas de zoekterm of de rubriek aan.</EmptyState>
+              <EmptyState title="Geen resultaten">Pas de zoekterm of de categorie aan.</EmptyState>
             )}
           </div>
           <div className="space-y-8 lg:sticky lg:top-40 lg:self-start"><AdSlot size="rectangle" /></div>

@@ -4,7 +4,7 @@ import { ClosingCta, PageHero, Reveal, ThemeCard } from "@/components/site/ui";
 import { meta } from "@/lib/meta";
 
 export const Route = createFileRoute("/themas/")({
-  head: () => ({ meta: meta("Thema's", "Zes thema's waarin Pilot België ondernemers volgt: van vakmanschap tot internationaal ondernemen.") }),
+  head: () => ({ meta: meta("Thema's", "Zes thema's waarin OndernemersTV Vlaanderen ondernemers volgt: van vakmanschap tot internationaal ondernemen.") }),
   component: () => (
     <>
       <PageHero eyebrow="Thema's" title="Zes invalshoeken op ondernemen" intro="Elk thema is een lens waarmee de redactie naar bedrijven kijkt." />

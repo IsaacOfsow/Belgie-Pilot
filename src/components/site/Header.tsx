@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { navMain, type NavItem } from "@/content/portal";
 import { site } from "@/content/site";
+import { edition } from "@/config/edition";
 import { AnyLink } from "./portal";
 import { btn } from "./ui";
 import { cn } from "@/lib/utils";
@@ -9,8 +10,14 @@ import { cn } from "@/lib/utils";
 export function Logo() {
   return (
     <Link to="/" className="flex items-baseline gap-2" aria-label={`${site.name} — home`}>
-      <span className="font-serif text-3xl leading-none">Pilot</span>
-      <span className="eyebrow !text-[0.62rem]">België</span>
+      {edition.logoImage ? (
+        <img src={edition.logoImage} alt={site.name} className="h-8 w-auto" />
+      ) : (
+        <>
+          <span className="font-serif text-2xl leading-none sm:text-3xl">{edition.logoWordmark.primary}</span>
+          <span className="eyebrow !text-[0.62rem]">{edition.logoWordmark.secondary}</span>
+        </>
+      )}
     </Link>
   );
 }
@@ -22,8 +29,8 @@ function useToday() {
   const [today, setToday] = useState("");
   useEffect(() => {
     const d = new Date();
-    const f = new Intl.DateTimeFormat("nl-BE", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/Brussels" }).format(d);
-    const t = new Intl.DateTimeFormat("nl-BE", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Brussels" }).format(d);
+    const f = new Intl.DateTimeFormat(edition.language, { weekday: "short", day: "numeric", month: "short", timeZone: edition.timezone }).format(d);
+    const t = new Intl.DateTimeFormat(edition.language, { hour: "2-digit", minute: "2-digit", timeZone: edition.timezone }).format(d);
     setToday(`${f} · ${t}`);
   }, []);
   return today;

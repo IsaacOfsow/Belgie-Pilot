@@ -17,6 +17,8 @@ import familie from "@/assets/theme-familie.jpg";
 import zorg from "@/assets/theme-zorg.jpg";
 import internationaal from "@/assets/theme-internationaal.jpg";
 import scraped from "./news-feed.json";
+import { edition } from "@/config/edition";
+import { parseStatus, parseUrgency, type ArticleRecord, type PublicationStatus, type Urgency } from "./cms";
 
 /** Toon een "Demo"-label bij voorbeeldartikels. Voor de pilot uit; zet op true om ze te markeren. */
 export const SHOW_DEMO_LABELS = false;
@@ -25,13 +27,9 @@ export const MIN_REAL_ITEMS = 6;
 
 export type Category = { slug: string; label: string; blurb: string };
 
-export const categories: Category[] = [
-  { slug: "vlaanderen", label: "Vlaanderen", blurb: "Ondernemen, economie en kmo's in Vlaanderen" },
-  { slug: "wallonie", label: "Wallonië", blurb: "Entreprises, économie et industrie en Wallonie" },
-  { slug: "brussel", label: "Brussel", blurb: "Ondernemen in en rond het Brussels Gewest" },
-  { slug: "europa", label: "Europa", blurb: "Europese regels, markten en kansen voor Belgische bedrijven" },
-  { slug: "beleid", label: "Beleid & politiek", blurb: "Wat beslissingen in de Kamer betekenen voor ondernemers" },
-];
+/** Categorieën komen uit de editie-configuratie (src/config/edition.ts). */
+export const categories: Category[] = edition.categories;
+const DEFAULT_CATEGORY = categories[0]?.slug ?? "ondernemen";
 
 export type Article = {
   slug: string;
@@ -39,25 +37,37 @@ export type Article = {
   excerpt: string;
   category: string; // Category slug
   publishedAt: string; // YYYY-MM-DD
+  /** Publicatietijd (HH:mm, lokale tijd) als die bekend is. */
+  publishedTime?: string;
   image: string;
   /** Eigen artikel: volledige tekst, één alinea per item. */
   body?: string[];
-  /** Verzameld artikel: bron met naam en link. */
+  /** Verzameld artikel: bron met naam en link ("Bron" / "Bronlink"). */
   source?: { name: string; url: string };
   author?: string;
   featured?: boolean;
   video?: boolean;
+  videoUrl?: string;
+  urgency?: Urgency;
+  breaking?: boolean;
+  tags?: string[];
+  language?: string;
+  region?: string;
+  status?: PublicationStatus;
   /** Voorbeeldinhoud (fictief). */
   demo?: boolean;
 };
 
-const categoryImage: Record<string, string> = { vlaanderen: vakmanschap, wallonie: duurzaamheid, brussel: zorg, europa: internationaal, beleid: hero };
+const categoryImage: Record<string, string> = {
+  ondernemen: vakmanschap, economie: hero, kmo: familie, "start-ups": internationaal, "tech-ai": innovatie,
+  finance: hero, vastgoed: zorg, arbeidsmarkt: familie, duurzaamheid: duurzaamheid, internationaal,
+};
 
 /** Eigen redactionele artikels (voorbeeld). */
 export const editorial: Article[] = [
   {
     slug: "kmos-zetten-stap-naar-automatisering", title: "Kmo's zetten de stap naar automatisering: eerst de werkvloer, dan de robot",
-    category: "vlaanderen", publishedAt: "2026-10-06", image: innovatie, featured: true, author: "Redactie", demo: true,
+    category: "tech-ai", publishedAt: "2026-10-06", publishedTime: "08:30", image: innovatie, featured: true, urgency: "hoog", tags: ["KMO", "Automatisering", "West-Vlaanderen"], author: "Redactie", demo: true,
     excerpt: "Kleine productiebedrijven investeren steeds vaker in automatisering. Wat werkt, wat mislukt en wat kost het echt?",
     body: [
       "Wie de werkplaats van een middelgroot metaalbedrijf in West-Vlaanderen binnenstapt, ziet het meteen: tussen de draaibanken staat sinds dit voorjaar een compacte robotarm. Hij laadt onderdelen, terwijl de operatoren zich op afwerking en controle richten.",
@@ -68,7 +78,7 @@ export const editorial: Article[] = [
   },
   {
     slug: "familiebedrijf-draagt-stokje-over", title: "Een familiebedrijf draagt het stokje over: wat behoud je, wat verander je?",
-    category: "vlaanderen", publishedAt: "2026-10-04", image: familie, author: "Redactie", demo: true,
+    category: "ondernemen", publishedAt: "2026-10-04", publishedTime: "07:45", image: familie, tags: ["Opvolging", "Familiebedrijf", "Limburg"], author: "Redactie", demo: true,
     excerpt: "Drie generaties, één werkplaats en een overdracht die zorgvuldig werd voorbereid.",
     body: [
       "In een Limburgs familiebedrijf zijn vader en dochter al twee jaar bezig met de overdracht. Ze begonnen met een eenvoudige afspraak: elke maand één uur praten over wat blijft en wat mag veranderen.",
@@ -78,7 +88,7 @@ export const editorial: Article[] = [
   },
   {
     slug: "exporteurs-kijken-naar-nieuwe-markten", title: "Belgische exporteurs kijken verder dan de buurlanden",
-    category: "europa", publishedAt: "2026-10-03", image: internationaal, author: "Redactie", demo: true,
+    category: "internationaal", publishedAt: "2026-10-03", publishedTime: "10:10", image: internationaal, tags: ["Export", "Internationaal"], author: "Redactie", demo: true,
     excerpt: "Waar groeien Belgische bedrijven over de grens en welke fouten maken ze bij hun eerste exportmarkt?",
     body: [
       "De meeste Belgische kmo's beginnen hun export bij de buren. Maar een groeiende groep kijkt verder: naar Scandinavië, Zuid-Europa en Oost-Europa, waar vraag en concurrentie anders liggen.",
@@ -88,96 +98,137 @@ export const editorial: Article[] = [
   },
   {
     slug: "duurzamer-produceren-zonder-marge-te-verliezen", title: "Duurzamer produceren zonder dat de marge verdwijnt",
-    category: "wallonie", publishedAt: "2026-10-02", image: duurzaamheid, author: "Redactie", demo: true,
-    excerpt: "Een Waalse producent toont hoe energiebesparing en circulaire materialen samen een gezonde marge opleveren.",
+    category: "duurzaamheid", publishedAt: "2026-10-02", publishedTime: "09:00", image: duurzaamheid, tags: ["Energie", "Circulair", "Oost-Vlaanderen"], author: "Redactie", demo: true,
+    excerpt: "Een Oost-Vlaamse producent toont hoe energiebesparing en circulaire materialen samen een gezonde marge opleveren.",
     body: [
-      "Een Waals productiebedrijf besliste twee jaar geleden om zijn energieverbruik stap voor stap te verlagen. Eerst kwamen de eenvoudige ingrepen: isolatie, warmteterugwinning en slimmere planning van de machines.",
+      "Een Oost-Vlaams productiebedrijf besliste twee jaar geleden om zijn energieverbruik stap voor stap te verlagen. Eerst kwamen de eenvoudige ingrepen: isolatie, warmteterugwinning en slimmere planning van de machines.",
       "Pas daarna volgden de grotere investeringen. Elke stap moest zich binnen een vaste termijn terugbetalen, anders ging hij niet door. Zo bleef de marge intact.",
       "De zaakvoerder noemt het grootste voordeel niet de besparing, maar de zekerheid: minder afhankelijk van schommelende energieprijzen en een sterker verhaal naar klanten.",
     ],
   },
 ];
 
-type Sample = { title: string; excerpt: string; category: string; publishedAt: string; source: string; image?: string; video?: boolean };
+type Sample = { title: string; excerpt: string; category: string; publishedAt: string; time?: string; urgency?: Urgency; source: string; image?: string; video?: boolean };
 
 /** Fictieve voorbeeldberichten — alleen voor de pilot. Bronnen en inhoud zijn verzonnen. */
 const sampleRaw: Sample[] = [
-  { title: "Nieuwe steunmaatregel moet investeringen van kmo's versnellen", category: "beleid", publishedAt: "2026-10-06", source: "Kmo Kompas",
+  { title: "Nieuwe steunmaatregel moet investeringen van kmo's versnellen", category: "kmo", publishedAt: "2026-10-06", time: "09:15", urgency: "hoog", source: "Kmo Kompas",
     excerpt: "Een nieuwe regeling wil investeringen in machines en digitalisering aantrekkelijker maken voor kleine bedrijven. Ondernemersorganisaties vragen vooral een eenvoudige aanvraagprocedure." },
-  { title: "Zorgsector zoekt versnelling bij digitale patiëntendossiers", category: "brussel", publishedAt: "2026-10-05", source: "Regio Ondernemen", image: zorg,
+  { title: "Zorgsector zoekt versnelling bij digitale patiëntendossiers", category: "tech-ai", publishedAt: "2026-10-05", time: "14:20", source: "Regio Ondernemen", image: zorg,
     excerpt: "Brusselse zorgaanbieders willen sneller werken met gedeelde dossiers, maar botsen op uiteenlopende systemen en strenge privacyregels." },
-  { title: "Europese regels voor verpakkingen worden strenger: wat verandert er?", category: "europa", publishedAt: "2026-10-05", source: "Pilot Wire",
+  { title: "Europese regels voor verpakkingen worden strenger: wat verandert er?", category: "internationaal", publishedAt: "2026-10-05", time: "11:05", urgency: "hoog", source: "Pilot Wire",
     excerpt: "Nieuwe Europese verpakkingsregels dwingen producenten om materialen te herzien. Een overzicht van de belangrijkste deadlines en wat bedrijven nu al kunnen doen." },
-  { title: "Debat over administratieve lasten: ondernemers vragen concrete stappen", category: "beleid", publishedAt: "2026-10-04", source: "Kmo Kompas", video: true, image: hero,
+  { title: "Debat over administratieve lasten: ondernemers vragen concrete stappen", category: "economie", publishedAt: "2026-10-04", time: "16:40", source: "Kmo Kompas", video: true, image: hero,
     excerpt: "In de Kamer botsten meerderheid en oppositie over de vereenvoudiging van administratieve verplichtingen. Ondernemers willen vooral duidelijke deadlines." },
-  { title: "Havenbedrijf investeert in elektrische kranen en walstroom", category: "vlaanderen", publishedAt: "2026-10-03", source: "Pilot Wire", image: innovatie,
+  { title: "Havenbedrijf investeert in elektrische kranen en walstroom", category: "duurzaamheid", publishedAt: "2026-10-03", time: "13:30", source: "Pilot Wire", image: innovatie,
     excerpt: "Een Vlaamse haventerminal vervangt oudere dieselkranen door elektrische varianten. De investering moet uitstoot en geluid beperken." },
-  { title: "Waalse start-ups halen nieuwe financiering op", category: "wallonie", publishedAt: "2026-10-02", source: "Regio Ondernemen", image: internationaal,
-    excerpt: "Jonge technologiebedrijven uit Wallonië sluiten financieringsrondes af. Investeerders wijzen op sterke technische teams en een groeiende klantenbasis." },
-  { title: "Brusselse horeca zoekt oplossingen voor personeelstekort", category: "brussel", publishedAt: "2026-10-01", source: "Regio Ondernemen", image: familie,
+  { title: "Vlaamse start-ups halen nieuwe financiering op", category: "start-ups", publishedAt: "2026-10-02", time: "12:00", source: "Regio Ondernemen", image: internationaal,
+    excerpt: "Jonge technologiebedrijven uit Vlaanderen sluiten financieringsrondes af. Investeerders wijzen op sterke technische teams en een groeiende klantenbasis." },
+  { title: "Brusselse horeca zoekt oplossingen voor personeelstekort", category: "arbeidsmarkt", publishedAt: "2026-10-01", time: "15:10", source: "Regio Ondernemen", image: familie,
     excerpt: "Restaurants en hotels in de hoofdstad zoeken nieuwe manieren om medewerkers te vinden en te houden, van flexibele roosters tot interne opleidingen." },
-  { title: "Energieprijzen en industrie: wat de laatste cijfers betekenen", category: "europa", publishedAt: "2026-10-01", source: "Pilot Wire", image: vakmanschap,
+  { title: "Energieprijzen en industrie: wat de laatste cijfers betekenen", category: "economie", publishedAt: "2026-10-01", time: "08:50", source: "Pilot Wire", image: vakmanschap,
     excerpt: "Een overzicht van de recente evolutie van de energiekosten en wat dat betekent voor energie-intensieve productiebedrijven in België." },
-  { title: "Vakmensen gezocht: opleidingscentra breiden aanbod uit", category: "vlaanderen", publishedAt: "2026-09-30", source: "Kmo Kompas", image: vakmanschap,
+  { title: "Vakmensen gezocht: opleidingscentra breiden aanbod uit", category: "arbeidsmarkt", publishedAt: "2026-09-30", time: "10:25", source: "Kmo Kompas", image: vakmanschap,
     excerpt: "Opleidingscentra voor technische beroepen verwachten meer cursisten en breiden hun aanbod uit, in nauwe samenwerking met bedrijven." },
-  { title: "Circulaire economie: Waalse producenten delen restmaterialen", category: "wallonie", publishedAt: "2026-09-30", source: "Pilot Wire", image: duurzaamheid,
-    excerpt: "Een netwerk van Waalse producenten ruilt restmaterialen en bespaart zo grondstoffen en afvalkosten." },
-  { title: "Handelsmissie naar Scandinavië trekt recordaantal bedrijven", category: "europa", publishedAt: "2026-09-29", source: "Regio Ondernemen", image: internationaal,
+  { title: "Circulaire economie: Vlaamse producenten delen restmaterialen", category: "duurzaamheid", publishedAt: "2026-09-30", time: "17:00", source: "Pilot Wire", image: duurzaamheid,
+    excerpt: "Een netwerk van Vlaamse producenten ruilt restmaterialen en bespaart zo grondstoffen en afvalkosten." },
+  { title: "Handelsmissie naar Scandinavië trekt recordaantal bedrijven", category: "internationaal", publishedAt: "2026-09-29", time: "09:40", source: "Regio Ondernemen", image: internationaal,
     excerpt: "Een geplande handelsmissie naar Noord-Europa kent veel belangstelling van Belgische kmo's uit voeding, technologie en bouw." },
-  { title: "Gesprek met een zaakvoerder over opvolging: 'Begin vroeg met praten'", category: "vlaanderen", publishedAt: "2026-09-29", source: "Pilot Wire", video: true, image: familie,
+  { title: "Gesprek met een zaakvoerder over opvolging: 'Begin vroeg met praten'", category: "ondernemen", publishedAt: "2026-09-29", time: "18:15", source: "Pilot Wire", video: true, image: familie,
     excerpt: "Een zaakvoerder blikt terug op zijn overdracht en geeft tips aan collega's die binnenkort hetzelfde moeten doen." },
+  { title: "Bedrijfsvastgoed: vraag verschuift naar kleinere kantoren en logistieke ruimte", category: "vastgoed", publishedAt: "2026-10-05", time: "09:55", source: "Regio Ondernemen", image: zorg,
+    excerpt: "Ondernemers zoeken minder vierkante meters kantoor en meer flexibele opslag- en productieruimte. Wat betekent dat voor huurprijzen en locatiekeuze?" },
+  { title: "Kmo's en financiering: waarmee houdt een bank rekening bij een kredietaanvraag?", category: "finance", publishedAt: "2026-10-04", time: "11:30", source: "Kmo Kompas", image: hero,
+    excerpt: "Een overzicht van de elementen die kredietverstrekkers bekijken, en hoe een ondernemer zijn dossier sterker kan maken." },
+  { title: "AI-tools in de boekhouding: wat kan een kleine zaak er nu mee?", category: "tech-ai", publishedAt: "2026-10-03", time: "08:20", source: "Pilot Wire", image: innovatie,
+    excerpt: "Van het inlezen van facturen tot het opvolgen van betalingen: een nuchtere blik op wat slimme software vandaag wel en niet kan." },
 ];
 
-// ——— Helpers voor de scraper-feed ———
-export type RawFeedItem = {
-  title: string; url: string; source: string; publishedAt: string;
-  excerpt?: string; image?: string; category?: string; slug?: string; video?: boolean;
+// ——— Helpers voor de scraper-feed / Monday ———
+/**
+ * Eén item uit `news-feed.json`. Twee naamgevingen worden begrepen, zodat de scraper én een Monday-export werken:
+ *  - eenvoudig:   title, url, source, publishedAt, excerpt, image, category, slug, video
+ *  - Monday/CMS:  title, source_url, source_name, publication_date, publication_time, summary, article_body,
+ *                 status, urgency, tags, video_url, breaking_news, featured, language, region (zie src/content/cms.ts)
+ * Zonder `status` geldt het item als gepubliceerd; met een andere status dan "published" wordt het niet getoond.
+ */
+export type RawFeedItem = Partial<ArticleRecord> & {
+  url?: string; source?: string; publishedAt?: string; excerpt?: string; video?: boolean; breaking?: boolean;
 };
 
 const slugify = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 70);
 const hash = (s: string) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h).toString(36).slice(0, 5); };
 const stripHtml = (s: string) => s.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-const isoDay = (s: string) => { const d = new Date(s); return Number.isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10); };
+
+const dayFmt = new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: edition.timezone });
+const timeFmt = new Intl.DateTimeFormat(edition.language, { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: edition.timezone });
+const isoDay = (s: string) => { const d = new Date(s); return Number.isNaN(d.getTime()) ? null : dayFmt.format(d); };
+const isoTime = (s: string) => { const d = new Date(s); return Number.isNaN(d.getTime()) ? undefined : timeFmt.format(d); };
 
 function normalizeCategory(c?: string): string {
   const v = (c ?? "").toLowerCase().trim();
-  return categories.find((x) => x.slug === v || x.label.toLowerCase() === v)?.slug ?? "vlaanderen";
+  return categories.find((x) => x.slug === v || x.label.toLowerCase() === v)?.slug ?? DEFAULT_CATEGORY;
 }
 
-/** Zet een ruw feed-item om naar een Article. Ongeldige items geven null. */
+/** Zet een ruw feed-item om naar een Article. Ongeldige of nog niet gepubliceerde items geven null. */
 export function fromFeed(raw: RawFeedItem): Article | null {
-  const day = isoDay(raw.publishedAt);
-  if (!raw.title || !raw.url || !raw.source || !day) return null;
+  const title = raw.title;
+  const url = raw.source_url ?? raw.url;
+  const sourceName = raw.source_name ?? raw.source;
+  const dateRaw = raw.publication_date ?? raw.publishedAt;
+  const day = dateRaw ? isoDay(dateRaw) : null;
+  if (!title || !url || !sourceName || !day) return null;
+  if ((parseStatus(raw.status) ?? "published") !== "published") return null;
   const category = normalizeCategory(raw.category);
-  const excerpt = stripHtml(raw.excerpt ?? "").slice(0, 220);
+  const excerpt = stripHtml(raw.summary ?? raw.excerpt ?? "").slice(0, 220);
+  const time = raw.publication_time ?? (dateRaw && dateRaw.includes("T") ? isoTime(dateRaw) : undefined);
+  const body = raw.article_body ? raw.article_body.split(/\n{2,}/).map((p) => stripHtml(p)).filter(Boolean) : [];
+  const video = raw.video || !!raw.video_url;
   return {
-    slug: raw.slug ? slugify(raw.slug) : `${slugify(raw.title)}-${hash(raw.url)}`,
-    title: stripHtml(raw.title), excerpt, category, publishedAt: day,
+    slug: raw.slug ? slugify(raw.slug) : `${slugify(title)}-${hash(url)}`,
+    title: stripHtml(title), excerpt, category, publishedAt: day,
     image: raw.image || categoryImage[category] || hero,
-    source: { name: raw.source, url: raw.url },
-    ...(raw.video ? { video: true } : {}),
+    source: { name: sourceName, url },
+    urgency: parseUrgency(raw.urgency), status: "published",
+    ...(time ? { publishedTime: time } : {}),
+    ...(body.length ? { body } : {}),
+    ...(video ? { video: true } : {}),
+    ...(raw.video_url ? { videoUrl: raw.video_url } : {}),
+    ...(raw.breaking_news || raw.breaking ? { breaking: true } : {}),
+    ...(raw.featured ? { featured: true } : {}),
+    ...(raw.tags?.length ? { tags: raw.tags } : {}),
+    ...(raw.language ? { language: raw.language } : {}),
+    ...(raw.region ? { region: raw.region } : {}),
   };
 }
 
 const sampleFeed: Article[] = sampleRaw.map((s) => ({
   slug: slugify(s.title), title: s.title, excerpt: s.excerpt, category: s.category, publishedAt: s.publishedAt,
   image: s.image ?? categoryImage[s.category] ?? hero,
-  source: { name: s.source, url: "https://example.com/" }, demo: true, ...(s.video ? { video: true } : {}),
+  source: { name: s.source, url: "https://example.com/" }, demo: true, urgency: s.urgency ?? "normaal", status: "published",
+  ...(s.time ? { publishedTime: s.time } : {}),
+  ...(s.video ? { video: true } : {}),
 }));
 
 const real: Article[] = (scraped as unknown as RawFeedItem[]).map(fromFeed).filter((a): a is Article => a !== null);
 const useSamples = real.length < MIN_REAL_ITEMS;
 
+const byNewest = (a: Article, b: Article) => `${b.publishedAt} ${b.publishedTime ?? "00:00"}`.localeCompare(`${a.publishedAt} ${a.publishedTime ?? "00:00"}`);
+
 /** Alle artikelen, nieuwste eerst. */
 export const articles: Article[] = [...editorial.filter((a) => !a.demo || useSamples), ...real, ...(useSamples ? sampleFeed : [])]
   .filter((a, i, all) => all.findIndex((b) => b.slug === a.slug) === i)
-  .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  .sort(byNewest);
 
 export const articleBySlug = (slug: string) => articles.find((a) => a.slug === slug);
 export const categoryBySlug = (slug: string) => categories.find((c) => c.slug === slug);
 export const articlesIn = (category: string) => articles.filter((a) => a.category === category);
 
-const dateFmt = new Intl.DateTimeFormat("nl-BE", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Brussels" });
-const shortFmt = new Intl.DateTimeFormat("nl-BE", { day: "numeric", month: "short", timeZone: "Europe/Brussels" });
+const dateFmt = new Intl.DateTimeFormat(edition.language, { day: "numeric", month: "long", year: "numeric", timeZone: edition.timezone });
+const shortFmt = new Intl.DateTimeFormat(edition.language, { day: "numeric", month: "short", timeZone: edition.timezone });
 export const formatDate = (iso: string) => dateFmt.format(new Date(`${iso}T12:00:00Z`));
 export const formatShort = (iso: string) => shortFmt.format(new Date(`${iso}T12:00:00Z`));
+/** "09:15" als de tijd bekend is, anders de korte datum. */
+export const formatStamp = (a: Pick<Article, "publishedAt" | "publishedTime">) => a.publishedTime ?? formatShort(a.publishedAt);
+/** "6 oktober 2026 · 09:15" */
+export const formatDateTime = (a: Pick<Article, "publishedAt" | "publishedTime">) => `${formatDate(a.publishedAt)}${a.publishedTime ? ` · ${a.publishedTime}` : ""}`;

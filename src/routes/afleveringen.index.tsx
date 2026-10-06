@@ -6,7 +6,7 @@ import { Search, Select } from "@/components/site/Filters";
 import { meta } from "@/lib/meta";
 
 export const Route = createFileRoute("/afleveringen/")({
-  head: () => ({ meta: meta("Afleveringen", "Het archief van Pilot België: zoek en filter afleveringen op seizoen, thema en sector.") }),
+  head: () => ({ meta: meta("Afleveringen", "Het archief van OndernemersTV Vlaanderen: zoek en filter afleveringen op seizoen, thema en sector.") }),
   component: Afleveringen,
 });
 

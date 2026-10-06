@@ -2,6 +2,7 @@
  * CENTRALE INHOUD — pas hier teksten, thema's, bedrijven en afleveringen aan.
  * Alles gemarkeerd met `PLACEHOLDER` of `demo: true` is voorbeeldinhoud en moet vervangen worden.
  */
+import { edition, activeSocials } from "@/config/edition";
 import vakmanschap from "@/assets/theme-vakmanschap.jpg";
 import innovatie from "@/assets/theme-innovatie.jpg";
 import duurzaamheid from "@/assets/theme-duurzaamheid.jpg";
@@ -10,13 +11,14 @@ import zorg from "@/assets/theme-zorg.jpg";
 import internationaal from "@/assets/theme-internationaal.jpg";
 
 export const site = {
-  name: "Pilot België",
-  tagline: "Ondernemen met koers",
-  season: "Seizoen 1 · In voorbereiding", // PLACEHOLDER
-  email: "redactie@pilotbelgie.be", // PLACEHOLDER — vervang door het echte adres
+  name: edition.brandName,
+  tagline: edition.tagline,
+  season: "Pilotversie · geen live-uitzending gekoppeld", // PLACEHOLDER
+  email: edition.commercialContact,
+  editorialEmail: edition.editorialContact,
   phone: null as string | null, // PLACEHOLDER — nog niet opgegeven
   cta: { label: "Vertel uw verhaal", to: "/contact" as const },
-  socials: [] as { label: string; href: string }[], // nog niet beschikbaar
+  socials: activeSocials.map((s) => ({ label: s.label, href: s.href })),
   partners: [] as { name: string; logo: string }[], // alleen bevestigde uitzendpartners
 };
 

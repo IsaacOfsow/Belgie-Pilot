@@ -5,7 +5,7 @@ import { ClosingCta, PageHero, Reveal, SectionHead } from "@/components/site/ui"
 import { meta } from "@/lib/meta";
 
 export const Route = createFileRoute("/programma")({
-  head: () => ({ meta: meta("Het programma", "De redactionele formule van Pilot België: welke verhalen we zoeken, voor wie, en hoe een verhaal tot stand komt.") }),
+  head: () => ({ meta: meta("Het programma", "De redactionele formule van OndernemersTV Vlaanderen: welke verhalen we zoeken, voor wie, en hoe een verhaal tot stand komt.") }),
   component: Programma,
 });
 
@@ -20,7 +20,7 @@ const steps = [
 function Programma() {
   return (
     <>
-      <PageHero eyebrow="Het programma" image={hero} title={<>Verhalen met <em>inhoud</em></>} intro="Pilot België is een redactioneel programma voor ondernemers, beslissers en iedereen die wil weten hoe goede bedrijven werken." />
+      <PageHero eyebrow="Het programma" image={hero} title={<>Verhalen met <em>inhoud</em></>} intro="OndernemersTV Vlaanderen is een redactioneel programma voor ondernemers, beslissers en iedereen die wil weten hoe goede bedrijven werken." />
       <section className="container-x grid gap-14 py-24 md:grid-cols-2 md:py-32">
         <SectionHead num="01" eyebrow="De formule" title="Eén bedrijf, één verhaal, veel inzicht">
           Elke reportage volgt één onderneming en de mensen die haar dragen. We zoeken geen reclame, maar een eerlijk beeld: de keuzes, de twijfels en de resultaten.

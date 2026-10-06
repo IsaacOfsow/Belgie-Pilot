@@ -109,7 +109,7 @@ export function AdSlot({ size = "leaderboard", ad, className }: { size?: "leader
       ) : (
         <Link to="/adverteren" className={cn("flex flex-col items-center justify-center gap-1 border border-dashed border-primary/40 bg-surface px-4 py-4 text-center transition-colors hover:border-primary", box)}>
           <span className="font-head text-sm font-bold">Hier kan uw advertentie staan</span>
-          <span className="text-xs text-muted-foreground">Bereik Belgische ondernemers — vanaf een klein bedrag</span>
+          <span className="text-xs text-muted-foreground">Zichtbaar bij Vlaamse ondernemers — prijs op aanvraag</span>
           <span className="mt-1 text-xs font-bold uppercase tracking-[0.14em] text-primary">Adverteren →</span>
         </Link>
       )}

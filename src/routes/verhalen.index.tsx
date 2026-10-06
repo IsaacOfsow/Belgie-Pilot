@@ -6,7 +6,7 @@ import { Search, Select } from "@/components/site/Filters";
 import { meta } from "@/lib/meta";
 
 export const Route = createFileRoute("/verhalen/")({
-  head: () => ({ meta: meta("Bedrijven & verhalen", "Ontdek de ondernemers en bedrijven achter de reportages van Pilot België.") }),
+  head: () => ({ meta: meta("Bedrijven & verhalen", "Ontdek de ondernemers en bedrijven achter de reportages van OndernemersTV Vlaanderen.") }),
   component: Verhalen,
 });
 

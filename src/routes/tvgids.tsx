@@ -4,14 +4,14 @@ import { PageTitle } from "@/components/site/portal";
 import { meta } from "@/lib/meta";
 
 export const Route = createFileRoute("/tvgids")({
-  head: () => ({ meta: meta("TV-gids", "Het zenderschema van Pilot België.") }),
+  head: () => ({ meta: meta("TV-gids", "Het voorbeeldschema van OndernemersTV.") }),
   component: TvGids,
 });
 
 function TvGids() {
   return (
     <>
-      <PageTitle kicker="Kijken" title={<>TV-<em>gids</em></>} intro="Het zenderschema. Het eerste seizoen is in voorbereiding; dit is een voorbeeldschema." />
+      <PageTitle kicker="Kijken" title={<>TV-<em>gids</em></>} intro="Het zenderschema. Er is nog geen echte uitzending: dit is een demo-schema." />
       <section className="container-x max-w-3xl py-14">
         <ol className="divide-y border-y">
           {schedule.map((s) => (

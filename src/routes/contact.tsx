@@ -6,7 +6,7 @@ import { btn, PageHero } from "@/components/site/ui";
 import { meta } from "@/lib/meta";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({ meta: meta("Contact", "Vertel uw verhaal aan de redactie van Pilot België. Vul het intakeformulier in of mail ons rechtstreeks.") }),
+  head: () => ({ meta: meta("Contact", "Vertel uw verhaal aan de redactie van OndernemersTV Vlaanderen. Vul het intakeformulier in of mail ons rechtstreeks.") }),
   component: Contact,
 });
 

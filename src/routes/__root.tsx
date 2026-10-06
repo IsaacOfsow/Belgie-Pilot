@@ -15,6 +15,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { CookieBanner } from "@/components/site/CookieBanner";
+import { edition } from "@/config/edition";
 import { btn } from "@/components/site/ui";
 
 function NotFoundComponent() {
@@ -52,9 +54,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Pilot België" },
-      { name: "description", content: "Redactioneel televisieprogramma over Belgische ondernemers." },
+      { title: edition.brandName },
+      { name: "description", content: edition.tagline },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: edition.brandName },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
@@ -73,7 +76,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="nl-BE">
+    <html lang={edition.language}>
       <head><HeadContent /></head>
       <body>{children}<Scripts /></body>
     </html>
@@ -89,6 +92,7 @@ function RootComponent() {
       <Header />
       <main id="main" key={path} className="page-fade"><Outlet /></main>
       <Footer />
+      <CookieBanner />
     </QueryClientProvider>
   );
 }

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/podcast")({
 function Podcast() {
   return (
     <>
-      <PageTitle kicker="Luisteren" title={<>De Pilot <em>Podcast</em></>} intro="Lange gesprekken met ondernemers over keuzes, twijfels en doorbraken." />
+      <PageTitle kicker="Luisteren" title={<>De OndernemersTV <em>Podcast</em></>} intro="Lange gesprekken met ondernemers over keuzes, twijfels en doorbraken." />
       <section className="container-x py-14">
         <EmptyState title="De eerste aflevering volgt" action={<Link to="/nieuwsbrief" className={btn({ variant: "outline" })}>Verwittig me</Link>}>
           Zodra de podcast online staat, vindt u hem hier en op de bekende podcastplatformen.
