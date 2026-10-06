@@ -69,3 +69,23 @@ Statussen: Draft, AI generated, Needs review, Approved, Published, Rejected. De 
 ## Niet gecontroleerd
 
 Deze wijziging is gemaakt zonder lokale build of typecontrole (geen toegang tot de pakketregistry). Controleer de Lovable-preview en de buildmelding na elke synchronisatie.
+
+## Huisstijl en tokens
+
+Kleurensysteem (alle tokens in `src/styles.css`):
+
+| Token | Waarde | Gebruik |
+| --- | --- | --- |
+| `--color-brand-primary` | `#0B1F33` | header, footer, live-vlak, nieuwsbrief, secundaire knop, links en labels op wit |
+| `--country-accent` | `#F2B705` | landaccent (Vlaanderen): actieve navigatie, primaire knop met navy tekst, kleine details. Nooit als tekst op wit |
+| `--color-background-secondary` | `#F4F6F8` | scheiding van secties (video, commercieel, secundair) |
+| `--color-text-primary` | `#17212B` | koppen en lopende tekst |
+| `--live` | `#E63946` | alleen live, breaking en dringend; knop "Kijk live" |
+| `--success` | `#16805C` | alleen positieve systeem- en datastatussen (nog nergens in gebruik) |
+
+- **Landaccent per editie:** `edition.theme.countryAccent` en `onAccent` in `src/config/edition.ts` worden op `<html>` gezet. Een andere editie verandert alleen die waarde.
+- **Navy vlakken:** de klasse `theme-navy` keert de tokens om (wit op navy, accent goud). Gebruik die voor elk donker vlak of tekst over een foto.
+- **Knoppen** (`btn` in `ui.tsx`): `gold` = primair (navy tekst), `navy` = secundair, `live` = rood, `outline`, `ghost`.
+- **Partnercontent:** `SponsorLabel` (goud/navy, rustig) en `DemoBadge`.
+
+Contrast: navy op goud 9,2:1; grijze hulptekst op wit 5,8:1. Wit op `#E63946` haalt 4,2:1, net onder de AA-grens van 4,5:1 voor kleine tekst. Dat is de gevraagde combinatie; groter of dikker lettertype of een iets donkerder rood lost dit op. Foutmeldingen gebruiken een donkerdere rode tint (`--destructive`) voor leesbaarheid.

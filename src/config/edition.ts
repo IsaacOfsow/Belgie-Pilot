@@ -36,6 +36,8 @@ export type Edition = {
   /** Tekst-logo. Een definitief logo wordt later geleverd (`logoImage`). */
   logoWordmark: { primary: string; secondary: string };
   logoImage: string | null;
+  /** Landaccent. Het globale merk (navy/wit) blijft gelijk; alleen deze kleur verschilt per editie. */
+  theme: { countryAccent: string; onAccent: string };
   timezone: string;
   currency: string;
   /** Adres voor commerciële aanvragen en redactie. Placeholder tot het echte adres bekend is. */
@@ -66,6 +68,7 @@ export const flandersEdition: Edition = {
   domain: null, // PLACEHOLDER — domein nog niet toegewezen
   logoWordmark: { primary: "OndernemersTV", secondary: "Vlaanderen" },
   logoImage: null, // PLACEHOLDER — officieel logo volgt van TV Media Partners
+  theme: { countryAccent: "#F2B705", onAccent: "#0B1F33" }, // Vlaanderen: goud met navy tekst
   timezone: "Europe/Brussels",
   currency: "EUR",
   commercialContact: "adverteren@ondernemerstv-vlaanderen.example", // PLACEHOLDER

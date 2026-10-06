@@ -9,7 +9,7 @@ import {
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, type CSSProperties, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -56,6 +56,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: edition.brandName },
       { name: "description", content: edition.tagline },
+      { name: "theme-color", content: "#0B1F33" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: edition.brandName },
       { name: "twitter:card", content: "summary_large_image" },
@@ -76,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang={edition.language}>
+    <html lang={edition.language} style={{ "--country-accent": edition.theme.countryAccent, "--on-accent": edition.theme.onAccent } as CSSProperties}>
       <head><HeadContent /></head>
       <body>{children}<Scripts /></body>
     </html>

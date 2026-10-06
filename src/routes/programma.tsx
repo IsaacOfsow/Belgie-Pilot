@@ -30,7 +30,7 @@ function Programma() {
           <div><h3 className="text-2xl text-foreground">Voor wie?</h3><p className="mt-2">Ondernemers, beslissers, studenten en geïnteresseerde kijkers die willen leren van anderen.</p></div>
         </Reveal>
       </section>
-      <section className="border-y bg-navy">
+      <section className="theme-navy border-y bg-background">
         <div className="container-x grid gap-14 py-24 md:grid-cols-[1fr_1.2fr]">
           <div>
             <SectionHead num="02" eyebrow="Werkwijze" title="Van gesprek tot publicatie" />

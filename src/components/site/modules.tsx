@@ -15,19 +15,19 @@ export function DemoBadge({ children = "Demo" }: { children?: string }) {
 
 /** Label voor betaalde inhoud. Altijd zichtbaar, altijd hetzelfde. */
 export function SponsorLabel({ children = "Partnercontent" }: { children?: string }) {
-  return <span className="inline-block border border-teal px-2 py-0.5 text-[0.62rem] font-extrabold uppercase tracking-[0.16em] text-teal">{children}</span>;
+  return <span className="inline-block border border-gold bg-gold/15 px-2 py-0.5 text-[0.62rem] font-extrabold uppercase tracking-[0.16em] text-navy">{children}</span>;
 }
 
 export function UrgencyBadge({ urgency }: { urgency?: Urgency | undefined }) {
   if (!urgency || urgency === "normaal") return null;
-  return <span className={cn(urgency === "breaking" ? "badge-live" : "badge-teal")}>{urgencyLabels[urgency]}</span>;
+  return <span className={cn(urgency === "breaking" ? "badge-live" : "badge-navy")}>{urgencyLabels[urgency]}</span>;
 }
 
 /** Strook onder de header: nu / straks. DEMO zolang er geen stream is gekoppeld. */
 export function LiveBanner() {
   const connected = !!edition.liveStream.embedUrl;
   return (
-    <div className="border-b bg-surface">
+    <div className="theme-navy border-b bg-background">
       <div className="container-x flex flex-wrap items-center gap-x-6 gap-y-2 py-3 text-sm">
         <span className="badge-live shrink-0">{connected ? "Nu live" : "Live-concept"}</span>
         <p className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
@@ -36,7 +36,7 @@ export function LiveBanner() {
           <span className="text-muted-foreground">· straks {liveDemo.next?.time} {liveDemo.next?.title}</span>
         </p>
         {!connected && <DemoBadge>Demo · geen stream gekoppeld</DemoBadge>}
-        <Link to="/live" className="ml-auto shrink-0 text-xs font-bold uppercase tracking-[0.14em] text-primary hover:text-foreground">Kijk live →</Link>
+        <Link to="/live" className={cn(btn({ variant: "live" }), "ml-auto shrink-0 !px-4 !py-2")}>Kijk live</Link>
       </div>
     </div>
   );
@@ -105,12 +105,12 @@ export function MostReadList({ items }: { items: Article[] }) {
 export function VideoCard({ v, variant = "card" }: { v: Video; variant?: "card" | "lead" }) {
   const programme = programmeBySlug(v.programme);
   return (
-    <Link to="/video/$slug" params={{ slug: v.slug }} className={cn("group block overflow-hidden border bg-card transition-colors hover:border-primary/60", variant === "lead" && "relative min-h-[22rem] bg-transparent")}>
+    <Link to="/video/$slug" params={{ slug: v.slug }} className={cn("group block overflow-hidden border bg-card transition-colors hover:border-primary/60", variant === "lead" && "theme-navy relative min-h-[22rem] bg-transparent")}>
       <div className={cn("relative overflow-hidden", variant === "lead" ? "absolute inset-0" : "aspect-video")}>
         <img src={v.image} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
         {variant === "lead" && <div className="overlay-dark absolute inset-0" />}
-        <span aria-hidden className="absolute left-1/2 top-1/2 flex size-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground">▶</span>
-        <span className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 text-xs font-semibold tabular-nums">{v.duration}</span>
+        <span aria-hidden className="absolute left-1/2 top-1/2 flex size-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-gold text-[color:var(--on-accent)]">▶</span>
+        <span className="absolute bottom-2 right-2 bg-navy/90 px-1.5 text-white py-0.5 text-xs font-semibold tabular-nums">{v.duration}</span>
       </div>
       <div className={cn("p-5", variant === "lead" && "absolute inset-x-0 bottom-0 p-6 md:p-8")}>
         {programme && <p className="eyebrow !text-[0.65rem]">{programme.title}</p>}
@@ -124,7 +124,7 @@ export function VideoCard({ v, variant = "card" }: { v: Video; variant?: "card" 
 /** Kaart voor korte, verticale formaten (carrousel). Koppelpunt voor Instagram/TikTok/LinkedIn. */
 export function CarouselContentCard({ c }: { c: Carousel }) {
   return (
-    <article className="group relative aspect-[4/5] overflow-hidden border">
+    <article className="theme-navy group relative aspect-[4/5] overflow-hidden border">
       <img src={c.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
       <div className="overlay-dark absolute inset-0" />
       <div className="absolute inset-x-0 bottom-0 p-5">
@@ -140,7 +140,7 @@ export function CarouselContentCard({ c }: { c: Carousel }) {
 export function PartnerContentCard({ a }: { a?: Article | undefined }) {
   if (a) {
     return (
-      <Link to="/nieuws/$slug" params={{ slug: a.slug }} className="group block border border-teal/60 bg-card p-6">
+      <Link to="/nieuws/$slug" params={{ slug: a.slug }} className="group block border border-gold/70 bg-card p-6">
         <SponsorLabel />
         <h3 className="mt-3 text-xl group-hover:text-primary">{a.title}</h3>
         <p className="mt-2 text-sm text-muted-foreground">{a.excerpt}</p>
@@ -148,7 +148,7 @@ export function PartnerContentCard({ a }: { a?: Article | undefined }) {
     );
   }
   return (
-    <div className="border border-dashed border-teal/70 bg-card p-6">
+    <div className="border border-dashed border-gold bg-card p-6">
       <SponsorLabel />
       <h3 className="mt-3 text-xl">Hier kan uw partnercontent staan</h3>
       <p className="mt-2 text-sm text-muted-foreground">Een artikel of video in samenwerking met de redactie, altijd duidelijk als partnercontent aangeduid.</p>
@@ -168,7 +168,7 @@ export function CommercialCTA({ title, text }: { title?: string; text?: string }
         </div>
         <div className="flex flex-col gap-3 md:items-end">
           <Link to="/adverteren" className={btn()}>Partner worden</Link>
-          <Link to="/adverteren" hash="aanvragen" className={btn({ variant: "outline" })}>Neem contact op</Link>
+          <Link to="/adverteren" hash="aanvragen" className={btn({ variant: "navy" })}>Neem contact op</Link>
         </div>
       </div>
     </section>

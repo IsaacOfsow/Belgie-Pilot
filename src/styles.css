@@ -32,48 +32,98 @@
   --color-ring: var(--ring);
   --color-navy: var(--navy);
   --color-gold: var(--gold);
-  --color-teal: var(--teal);
   --color-live: var(--live);
+  --color-success: var(--success);
   --color-surface: var(--surface);
+  --color-divider: var(--divider);
 }
 
-/* Kleuren afgeleid van uitblinkers.tv: warm zwart, champagne-goud en teal */
+/*
+ * DESIGN TOKENS — OndernemersTV
+ * Globaal merk: navy + wit, grijs als tweede achtergrond, live-rood, succes-groen.
+ * Landaccent (goud voor Vlaanderen) is configureerbaar: `edition.theme.countryAccent` in src/config/edition.ts
+ * zet --country-accent op <html>. Een nieuwe landeditie verandert dus alleen die waarde.
+ */
 :root {
-  --radius: 4px;
-  --background: oklch(0.13 0.003 60);
-  --surface: oklch(0.17 0.004 60);
-  --navy: oklch(0.17 0.004 60);
-  --foreground: oklch(0.97 0.006 80);
-  --card: oklch(0.19 0.004 60);
-  --card-foreground: oklch(0.97 0.006 80);
-  --popover: oklch(0.17 0.004 60);
-  --popover-foreground: oklch(0.97 0.006 80);
-  --primary: oklch(0.755 0.09 82);
-  --primary-foreground: oklch(0.11 0.003 60);
-  --gold: oklch(0.755 0.09 82);
-  --teal: oklch(0.62 0.07 200);
-  --live: oklch(0.6 0.19 28);
-  --champagne: oklch(0.88 0.07 85);
-  --secondary: oklch(0.24 0.006 60);
-  --secondary-foreground: oklch(0.97 0.006 80);
-  --muted: oklch(0.21 0.005 60);
-  --muted-foreground: oklch(0.72 0.015 80);
-  --accent: oklch(0.26 0.01 70);
-  --accent-foreground: oklch(0.97 0.006 80);
-  --destructive: oklch(0.6 0.19 28);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.97 0.006 80 / 14%);
-  --input: oklch(0.97 0.006 80 / 22%);
-  --ring: oklch(0.755 0.09 82);
-  --overlay: linear-gradient(180deg, oklch(0.1 0.003 60 / 40%) 0%, oklch(0.1 0.003 60 / 85%) 75%, var(--background) 100%);
+  /* — Merkkleuren — */
+  --color-brand-primary: #0B1F33;
+  --country-accent: #F2B705;
+  --color-country-accent: var(--country-accent);
+  --on-accent: #0B1F33; /* tekst op het landaccent (navy, nooit wit) */
+  --color-background-secondary: #F4F6F8;
+  --color-text-primary: #17212B;
+  --live: #E63946;       /* ALLEEN voor live / breaking / dringend */
+  --success: #16805C;    /* ALLEEN voor positieve systeem- en datastatussen */
+
+  /* — Semantische tokens (lezen de merkkleuren) — */
+  --navy: var(--color-brand-primary);
+  --gold: var(--country-accent);
+  --background: #FFFFFF;
+  --surface: var(--color-background-secondary);
+  --foreground: var(--color-text-primary);
+  --card: #FFFFFF;
+  --card-foreground: var(--color-text-primary);
+  --popover: #FFFFFF;
+  --popover-foreground: var(--color-text-primary);
+  --primary: var(--color-brand-primary);        /* links, labels en accenten op wit zijn navy */
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--color-background-secondary);
+  --secondary-foreground: var(--color-text-primary);
+  --muted: var(--color-background-secondary);
+  --muted-foreground: #5B6773;                  /* 5,8:1 op wit, 5,4:1 op #F4F6F8 */
+  --accent: var(--color-background-secondary);
+  --accent-foreground: var(--color-text-primary);
+  --destructive: #C2303C;                       /* foutmeldingen: donkerder dan live-rood voor leesbaarheid */
+  --destructive-foreground: #FFFFFF;
+  --divider: #DDE2E8;
+  --border: var(--divider);
+  --input: #C5CDD6;
+  --ring: var(--color-brand-primary);
+
+  /* — Typografie, vorm, ritme — */
+  --radius: 2px;
+  --space-section: 4rem;
+  --space-section-lg: 6rem;
+  --measure: 68ch;
+
+  /* — Knoppen — */
+  --btn-primary-bg: var(--country-accent);
+  --btn-primary-fg: var(--on-accent);
+  --btn-secondary-bg: var(--color-brand-primary);
+  --btn-secondary-fg: #FFFFFF;
+  --btn-live-bg: var(--live);
+  --btn-live-fg: #FFFFFF;
+
+  --overlay: linear-gradient(180deg, rgb(11 31 51 / 25%) 0%, rgb(11 31 51 / 88%) 78%, rgb(11 31 51 / 100%) 100%);
+}
+
+/* Donkere merkvlakken (header, footer, live, nieuwsbrief, tekst over beeld): zelfde tokens, omgekeerd. */
+.theme-navy {
+  --background: var(--color-brand-primary);
+  --surface: color-mix(in srgb, var(--color-brand-primary) 90%, white);
+  --card: color-mix(in srgb, var(--color-brand-primary) 94%, white);
+  --popover: color-mix(in srgb, var(--color-brand-primary) 92%, white);
+  --foreground: #FFFFFF;
+  --card-foreground: #FFFFFF;
+  --popover-foreground: #FFFFFF;
+  --muted: color-mix(in srgb, var(--color-brand-primary) 88%, white);
+  --muted-foreground: color-mix(in srgb, white 72%, var(--color-brand-primary));
+  --primary: var(--country-accent);             /* op navy is het accent goud */
+  --primary-foreground: var(--on-accent);
+  --accent: color-mix(in srgb, var(--color-brand-primary) 85%, white);
+  --accent-foreground: #FFFFFF;
+  --border: rgb(255 255 255 / 16%);
+  --input: rgb(255 255 255 / 38%);
+  --ring: var(--country-accent);
+  color: var(--foreground);
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * { border-color: var(--border); }
   html { scroll-behavior: smooth; }
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
@@ -81,7 +131,7 @@
   h3, h4 { font-family: var(--font-head); font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; }
   h1 em, h2 em { font-style: italic; color: var(--primary); }
   :focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
-  ::selection { background: var(--primary); color: var(--primary-foreground); }
+  ::selection { background: var(--country-accent); color: var(--on-accent); }
 }
 
 @utility eyebrow {
@@ -99,14 +149,14 @@
   padding: 0.25rem 0.6rem; border-radius: 2px;
   font-size: 0.65rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
 }
-@utility badge-teal {
+@utility badge-navy {
   display: inline-flex; align-items: center; gap: 0.4rem;
-  background: var(--teal); color: oklch(0.98 0.005 80);
+  background: var(--navy); color: #fff;
   padding: 0.25rem 0.6rem; border-radius: 2px;
   font-size: 0.65rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
 }
 
-@utility rule-gold { border-top: 2px solid var(--primary); }
+@utility rule-gold { border-top: 2px solid var(--gold); }
 
 @utility overlay-dark { background: var(--overlay); }
 

@@ -12,7 +12,7 @@ const legal: [string, string][] = [["privacy", "Privacy"], ["cookies", "Cookies"
 
 export function Footer() {
   return (
-    <footer className="mt-8 border-t-2 border-primary bg-surface">
+    <footer className="theme-navy mt-8 border-t-2 border-primary bg-background">
       <div className="container-x grid gap-10 border-b py-12 md:grid-cols-2 md:items-center">
         <div>
           <p className="eyebrow">Nieuwsbrief</p>

@@ -9,9 +9,14 @@ export const btn = cva(
   {
     variants: {
       variant: {
-        gold: "bg-primary text-primary-foreground hover:bg-foreground",
-        outline: "border border-foreground/40 text-foreground hover:border-primary hover:text-primary",
-        ghost: "text-primary hover:text-foreground px-0",
+        /** Primaire actie: landaccent met navy tekst. */
+        gold: "bg-gold text-[color:var(--on-accent)] hover:brightness-95",
+        /** Secundaire actie: navy met witte tekst. Niet gebruiken op een navy vlak (gebruik daar outline). */
+        navy: "bg-navy text-white hover:bg-navy/90",
+        /** Live-actie: rood met witte tekst. Alleen voor live/kijk-live. */
+        live: "bg-live text-white hover:brightness-95",
+        outline: "border border-foreground/40 text-foreground hover:border-foreground hover:bg-foreground hover:text-background",
+        ghost: "text-primary underline-offset-4 hover:underline px-0",
       },
     },
     defaultVariants: { variant: "gold" },
@@ -44,7 +49,7 @@ export function SectionHead({ num, eyebrow, title, children }: { num?: string; e
 
 export function PageHero({ eyebrow, title, intro, image }: { eyebrow: string; title: ReactNode; intro?: ReactNode; image?: string }) {
   return (
-    <section className="relative flex min-h-[44vh] items-end overflow-hidden border-b">
+    <section className="theme-navy relative flex min-h-[44vh] items-end overflow-hidden border-b">
       {image && <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover" />}
       <div className={cn("absolute inset-0", image ? "overlay-dark" : "bg-navy")} />
       <div className="container-x relative pb-14 pt-24">
@@ -61,8 +66,8 @@ export function ThemeCard({ t }: { t: Theme }) {
     <Link to="/themas/$slug" params={{ slug: t.slug }} className="group block overflow-hidden border bg-card transition-colors hover:border-primary/60">
       <div className="relative aspect-[16/10] overflow-hidden">
         <img src={t.image} alt={t.title} loading="lazy" width={1024} height={768} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-        <div className="absolute inset-0 bg-background/20" />
-        <span className="badge-teal absolute left-4 top-4">Thema {t.number}</span>
+        <div className="absolute inset-0 bg-navy/10" />
+        <span className="badge-navy absolute left-4 top-4">Thema {t.number}</span>
       </div>
       <div className="p-5">
         <h3 className="text-xl md:text-2xl">{t.title}</h3>
@@ -78,7 +83,7 @@ export function CompanyCard({ c }: { c: Company }) {
     <Link to="/verhalen/$slug" params={{ slug: c.slug }} className="group block overflow-hidden border bg-card transition-colors hover:border-primary/60">
       <div className="relative aspect-[16/10] overflow-hidden">
         <img src={c.image} alt={c.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-        <div className="absolute inset-0 bg-background/20" />
+        <div className="absolute inset-0 bg-navy/10" />
         <span className="absolute left-4 top-4 bg-primary px-2 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.14em] text-primary-foreground">{c.sector}</span>
         {c.demo && <span className="absolute right-4 top-4 border border-primary/60 bg-background/80 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-primary">Demo</span>}
       </div>
@@ -120,7 +125,7 @@ export function EmptyState({ title, children, action }: { title: string; childre
 
 export function ClosingCta({ title = "Heeft uw bedrijf een verhaal dat verteld moet worden?", text = "De redactie zoekt ondernemers met vakkennis, lef en een duidelijke visie. Neem vrijblijvend contact op voor een eerste gesprek." }) {
   return (
-    <section className="border-t bg-navy">
+    <section className="theme-navy border-t bg-background">
       <div className="container-x py-24 text-center md:py-32">
         <Reveal>
           <p className="eyebrow">Redactie</p>

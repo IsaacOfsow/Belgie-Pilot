@@ -27,7 +27,7 @@ function Live() {
             <>
               <img src={hero} alt="" className="h-full w-full object-cover" />
               <div className="overlay-dark absolute inset-0" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
+              <div className="theme-navy absolute inset-0 flex flex-col items-center justify-center gap-4 bg-transparent p-6 text-center">
                 <span className="badge-live">Geen live-uitzending gekoppeld</span>
                 <p className="font-serif text-3xl md:text-5xl">{edition.brandName}</p>
                 <Link to="/nieuwsbrief" className={btn()}>Verwittig me bij de start</Link>

@@ -74,7 +74,7 @@ export function Header() {
   return (
     <>
       {/* Bovenbalk: live-status */}
-      <div className="border-b bg-surface">
+      <div className="theme-navy border-b bg-surface">
         <div className="container-x flex h-10 items-center justify-between gap-4 text-xs">
           <p className="flex min-w-0 items-center gap-3">
             <Link to="/live" className="badge-live shrink-0"><span aria-hidden className="size-1.5 rounded-full bg-white" />Live</Link>
@@ -84,7 +84,7 @@ export function Header() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
+      <header className="theme-navy sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
         {/* Servicerij */}
         <div className="container-x hidden h-9 items-center justify-between border-b text-[0.72rem] text-muted-foreground md:flex">
           <p className="flex items-center gap-5">
@@ -124,7 +124,7 @@ export function Header() {
       </header>
 
       {open && (
-        <div role="dialog" aria-modal="true" aria-label="Menu" className="page-fade fixed inset-0 z-[70] overflow-y-auto bg-background lg:hidden">
+        <div role="dialog" aria-modal="true" aria-label="Menu" className="theme-navy page-fade fixed inset-0 z-[70] overflow-y-auto bg-background lg:hidden">
           <div className="container-x flex h-[72px] items-center justify-between">
             <Logo />
             <button ref={closeRef} type="button" onClick={() => setOpen(false)} className="p-2 text-sm font-bold uppercase tracking-[0.2em]" aria-label="Menu sluiten">Sluiten ✕</button>

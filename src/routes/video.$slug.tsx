@@ -33,7 +33,7 @@ function VideoDetail() {
             <>
               <img src={v.image} alt="" className="h-full w-full object-cover" />
               <div className="overlay-dark absolute inset-0" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
+              <div className="theme-navy absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
                 <DemoBadge>Demo · geen video gekoppeld</DemoBadge>
                 <p className="max-w-md text-sm text-muted-foreground">Hier verschijnt de videospeler zodra een echte video is gekoppeld.</p>
               </div>

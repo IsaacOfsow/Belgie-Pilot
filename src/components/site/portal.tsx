@@ -14,7 +14,8 @@ export const AnyLink = Link as unknown as (props: {
 /** Sectiekop met gouden lijn en optionele "alles bekijken"-link. */
 export function SectionBar({ title, kicker, to, label }: { title: ReactNode; kicker?: string; to?: string; label?: string }) {
   return (
-    <div className="flex items-end justify-between gap-6 border-b border-primary/70 pb-3">
+    <div className="relative flex items-end justify-between gap-6 border-b pb-3">
+      <span aria-hidden className="absolute -bottom-px left-0 h-[3px] w-16 bg-gold" />
       <div>
         {kicker && <p className="eyebrow">{kicker}</p>}
         <h2 className="mt-1 text-3xl md:text-4xl">{title}</h2>
@@ -27,7 +28,7 @@ export function SectionBar({ title, kicker, to, label }: { title: ReactNode; kic
 export function CategoryTag({ slug }: { slug: string }) {
   const c = categoryBySlug(slug);
   if (!c) return null;
-  return <span className="eyebrow !text-[0.65rem]">{c.label}</span>;
+  return <span className="eyebrow inline-flex items-center gap-2 !text-[0.65rem]"><span aria-hidden className="h-3 w-[3px] bg-gold" />{c.label}</span>;
 }
 
 function DemoTag() {
@@ -40,7 +41,7 @@ export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "ca
   const common = { to: "/nieuws/$slug", params: { slug: a.slug } } as const;
   if (variant === "lead") {
     return (
-      <Link {...common} className="group relative block min-h-[22rem] overflow-hidden border lg:min-h-[30rem]">
+      <Link {...common} className="theme-navy group relative block min-h-[22rem] overflow-hidden border lg:min-h-[30rem]">
         <img src={a.image} alt="" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="overlay-dark absolute inset-0" />
         <div className="absolute inset-x-0 bottom-0 p-6 md:p-10">
@@ -134,7 +135,7 @@ export function NewsletterForm({ compact }: { compact?: boolean }) {
     <form noValidate onSubmit={submit} className={cn("flex flex-col gap-3", compact ? "" : "sm:flex-row")}>
       <div className="flex-1">
         <label htmlFor="nl-email" className="sr-only">E-mailadres</label>
-        <input id="nl-email" name="email" type="email" placeholder="uw@email.be" aria-invalid={!!error} className="w-full border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground aria-[invalid=true]:border-destructive" />
+        <input id="nl-email" name="email" type="email" placeholder="uw@email.be" aria-invalid={!!error} className="w-full border border-input bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground aria-[invalid=true]:border-destructive" />
         {error && <p className="mt-1 text-sm text-destructive">{error}</p>}
       </div>
       <button type="submit" className={btn()}>Aanmelden</button>

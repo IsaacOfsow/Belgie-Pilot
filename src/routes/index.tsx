@@ -156,7 +156,7 @@ function Home() {
       </section>
 
       {/* Nieuwsbrief */}
-      <section className="border-t bg-surface">
+      <section className="theme-navy bg-background">
         <div className="container-x py-16">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow">Nieuwsbrief</p>
