@@ -107,7 +107,7 @@ export function Header() {
 
         <div className="container-x flex h-[72px] items-center justify-between gap-5 xl:gap-6">
           <Logo />
-          <nav ref={navRef} aria-label="Hoofdmenu" className="hidden min-w-0 items-center gap-5 lg:flex xl:gap-4 2xl:gap-6">
+          <nav ref={navRef} aria-label="Hoofdmenu" className="hidden min-w-0 items-center gap-5 lg:flex xl:gap-4">
             {navMain.map((n) =>
               n.children ? (
                 <div key={n.label} className="relative shrink-0" onMouseEnter={() => setDrop(n.label)} onMouseLeave={() => setDrop(null)}>
