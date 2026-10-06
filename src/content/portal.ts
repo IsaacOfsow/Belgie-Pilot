@@ -8,14 +8,20 @@ import { edition } from "@/config/edition";
 import { categories } from "./news";
 
 export type NavChild = { label: string; to: string; note?: string; params?: Record<string, string> };
-export type NavItem = { label: string; to: string; params?: Record<string, string>; children?: NavChild[] };
+export type NavItem = {
+  label: string; to: string; params?: Record<string, string>; children?: NavChild[];
+  /** Op middelgrote desktopbreedte (lg) verhuist dit item naar "Meer"; vanaf xl staat het in de hoofdbalk. */
+  collapsible?: boolean;
+};
 
 const catLink = (slug: string) => ({ to: "/categorie/$slug", params: { slug } });
 const primaryCats = edition.navCategories.flatMap((slug) => { const c = categories.find((x) => x.slug === slug); return c ? [{ label: c.label, ...catLink(c.slug) }] : []; });
 const moreCats = categories.filter((c) => !edition.navCategories.includes(c.slug)).map((c) => ({ label: c.label, note: c.blurb, ...catLink(c.slug) }));
 
 /** Beknopte hoofdnavigatie; secundaire categorieën en zakelijke pagina's staan onder "Meer". */
-export const navMain: NavItem[] = [
+const collapseAtMedium = (n: NavItem) => n.to === "/programmas" || (n.params?.slug !== undefined && n.params.slug === edition.navCategories[edition.navCategories.length - 1]);
+
+export const navMain: NavItem[] = ([
   { label: "Home", to: "/" },
   { label: "Nieuws", to: "/nieuws" },
   ...primaryCats,
@@ -28,7 +34,7 @@ export const navMain: NavItem[] = [
     { label: "Adverteren & Samenwerken", to: "/adverteren", note: "Voor adverteerders en partners" },
     { label: "Over ons", to: "/over-ons" },
   ] },
-];
+] as NavItem[]).map((n) => (collapseAtMedium(n) ? { ...n, collapsible: true } : n));
 
 /** "Vandaag voor ondernemers": per blok de nieuwste redactionele keuze uit een categorie. Geen live marktdata. */
 export const todayBlocks = [

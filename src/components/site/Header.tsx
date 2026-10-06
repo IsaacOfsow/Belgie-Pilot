@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 export function Logo() {
   return (
-    <Link to="/" className="flex items-baseline gap-2" aria-label={`${site.name} — home`}>
+    <Link to="/" className="flex shrink-0 items-baseline gap-2 whitespace-nowrap" aria-label={`${site.name} — home`}>
       {edition.logoImage ? (
         <img src={edition.logoImage} alt={site.name} className="h-8 w-auto" />
       ) : (
@@ -22,7 +22,7 @@ export function Logo() {
   );
 }
 
-const linkCls = "relative py-2 text-[0.82rem] font-semibold tracking-wide text-muted-foreground transition-colors hover:text-foreground";
+const linkCls = "relative inline-flex h-10 shrink-0 items-center gap-1 whitespace-nowrap text-[0.82rem] font-semibold leading-none tracking-wide text-muted-foreground transition-colors hover:text-foreground";
 const activeCls = "!text-foreground after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-primary";
 
 function useToday() {
@@ -37,9 +37,19 @@ function useToday() {
 }
 
 function Dropdown({ item, onNavigate }: { item: NavItem; onNavigate: () => void }) {
+  const collapsed = navMain.filter((n) => n.collapsible);
   return (
-    <div className="absolute left-1/2 top-full z-50 w-80 -translate-x-1/2 pt-3">
+    <div className="absolute right-0 top-full z-50 w-80 pt-3 xl:left-1/2 xl:right-auto xl:-translate-x-1/2">
       <ul className="border bg-popover p-2 shadow-2xl">
+        {/* Op lg-breedte staan deze items niet in de hoofdbalk */}
+        {collapsed.map((c) => (
+          <li key={`c-${c.label}`} className="xl:hidden">
+            <AnyLink to={c.to} {...(c.params ? { params: c.params } : {})} onClick={onNavigate} className="block px-4 py-2.5 hover:bg-accent">
+              <span className="block text-sm font-semibold">{c.label}</span>
+            </AnyLink>
+          </li>
+        ))}
+        {collapsed.length > 0 && <li aria-hidden className="mx-4 my-1 border-t xl:hidden" />}
         {item.children?.map((c) => (
           <li key={c.label}>
             <AnyLink to={c.to} {...(c.params ? { params: c.params } : {})} onClick={onNavigate} className="block px-4 py-2.5 hover:bg-accent">
@@ -95,27 +105,28 @@ export function Header() {
           <p suppressHydrationWarning>{today}</p>
         </div>
 
-        <div className="container-x flex h-[72px] items-center justify-between gap-6">
+        <div className="container-x flex h-[72px] items-center justify-between gap-5 xl:gap-6">
           <Logo />
-          <nav ref={navRef} aria-label="Hoofdmenu" className="hidden items-center gap-5 lg:flex">
+          <nav ref={navRef} aria-label="Hoofdmenu" className="hidden min-w-0 items-center gap-5 lg:flex xl:gap-4 2xl:gap-6">
             {navMain.map((n) =>
               n.children ? (
-                <div key={n.label} className="relative" onMouseEnter={() => setDrop(n.label)} onMouseLeave={() => setDrop(null)}>
+                <div key={n.label} className="relative shrink-0" onMouseEnter={() => setDrop(n.label)} onMouseLeave={() => setDrop(null)}>
                   <button type="button" className={linkCls} aria-expanded={drop === n.label} aria-haspopup="true" onClick={() => setDrop((d) => (d === n.label ? null : n.label))}>
-                    {n.label} <span aria-hidden>▾</span>
+                    {n.label}
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden className={cn("shrink-0 transition-transform", drop === n.label && "rotate-180")}><path d="m6 9 6 6 6-6" /></svg>
                   </button>
                   {drop === n.label && <Dropdown item={n} onNavigate={() => setDrop(null)} />}
                 </div>
               ) : (
-                <AnyLink key={n.label} to={n.to} {...(n.params ? { params: n.params } : {})} className={linkCls} activeProps={{ className: activeCls }} activeOptions={{ exact: n.to === "/" }}>{n.label}</AnyLink>
+                <AnyLink key={n.label} to={n.to} {...(n.params ? { params: n.params } : {})} className={cn(linkCls, n.collapsible && "hidden xl:inline-flex")} activeProps={{ className: activeCls }} activeOptions={{ exact: n.to === "/" }}>{n.label}</AnyLink>
               ),
             )}
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <Link to="/zoeken" aria-label="Zoeken" className="p-2 text-muted-foreground hover:text-foreground">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
             </Link>
-            <Link to="/nieuwsbrief" className={cn(btn(), "hidden xl:inline-flex !px-5 !py-2.5")}>Nieuwsbrief</Link>
+            <Link to="/nieuwsbrief" className={cn(btn(), "hidden whitespace-nowrap xl:inline-flex !px-4 !py-2.5")}>Nieuwsbrief</Link>
             <button type="button" className="p-2 lg:hidden" aria-label="Menu openen" aria-expanded={open} onClick={() => setOpen(true)}>
               <span className="block h-0.5 w-6 bg-foreground" /><span className="mt-1.5 block h-0.5 w-6 bg-foreground" /><span className="mt-1.5 block h-0.5 w-4 bg-primary" />
             </button>
