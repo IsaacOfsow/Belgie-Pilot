@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
+import { edition } from "@/config/edition";
 import { useState, type FormEvent, type ReactNode } from "react";
-import { categoryBySlug, formatShort, SHOW_DEMO_LABELS, type Article } from "@/content/news";
+import { categoryBySlug, formatShort, formatStamp, SHOW_DEMO_LABELS, type Article } from "@/content/news";
 import { site } from "@/content/site";
 import { btn } from "./ui";
 import { cn } from "@/lib/utils";
@@ -36,8 +37,8 @@ function DemoTag() {
   return <span className="border border-primary/50 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-primary">Demo</span>;
 }
 
-/** Nieuwskaart. variant: card (standaard), lead (groot, tekst over beeld), row (compact, zonder beeld), thumb (beeld links). */
-export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "card" | "lead" | "row" | "thumb" }) {
+/** Nieuwskaart. variant: lead (hoofdbericht, tekst over beeld), major (grote kaart), card (standaard), thumb (beeld links), row (compact kopregel). */
+export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "card" | "major" | "lead" | "row" | "thumb" }) {
   const common = { to: "/nieuws/$slug", params: { slug: a.slug } } as const;
   if (variant === "lead") {
     return (
@@ -53,10 +54,26 @@ export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "ca
       </Link>
     );
   }
+  if (variant === "major") {
+    return (
+      <Link {...common} className="group block">
+        <div className="relative aspect-[16/9] overflow-hidden border">
+          <img src={a.image} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+          {a.video && <span className="badge-live absolute left-3 top-3">Video</span>}
+        </div>
+        <div className="mt-4">
+          <div className="flex items-center gap-3"><CategoryTag slug={a.category} />{a.demo && <DemoTag />}</div>
+          <h3 className="mt-2 font-serif text-2xl font-normal leading-[1.1] group-hover:underline md:text-3xl">{a.title}</h3>
+          <p className="mt-2 line-clamp-3 leading-relaxed text-muted-foreground">{a.excerpt}</p>
+          <p className="mt-3 text-xs text-muted-foreground">{a.author ?? a.source?.name} · {formatStamp(a)}</p>
+        </div>
+      </Link>
+    );
+  }
   if (variant === "row") {
     return (
       <Link {...common} className="group flex gap-4 py-4">
-        <span className="w-14 shrink-0 pt-0.5 text-xs font-semibold uppercase tracking-wide text-primary">{formatShort(a.publishedAt)}</span>
+        <span className="w-14 shrink-0 pt-0.5 text-xs font-semibold tabular-nums tracking-wide text-primary">{formatStamp(a)}</span>
         <span className="min-w-0">
           <CategoryTag slug={a.category} />
           <span className="mt-1 block font-head text-base font-bold leading-snug group-hover:text-primary">{a.title}</span>
@@ -110,7 +127,7 @@ export function AdSlot({ size = "leaderboard", ad, className }: { size?: "leader
       ) : (
         <Link to="/adverteren" className={cn("flex flex-col items-center justify-center gap-1 border border-dashed border-primary/40 bg-surface px-4 py-4 text-center transition-colors hover:border-primary", box)}>
           <span className="font-head text-sm font-bold">Hier kan uw advertentie staan</span>
-          <span className="text-xs text-muted-foreground">Zichtbaar bij Vlaamse ondernemers — prijs op aanvraag</span>
+          <span className="text-xs text-muted-foreground">Zichtbaar bij ondernemers in {edition.region} — prijs op aanvraag</span>
           <span className="mt-1 text-xs font-bold uppercase tracking-[0.14em] text-primary">Adverteren →</span>
         </Link>
       )}

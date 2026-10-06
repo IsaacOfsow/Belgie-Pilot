@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { edition } from "@/config/edition";
 import { programmes } from "@/content/portal";
 import { DemoBadge } from "@/components/site/modules";
 import { AnyLink, PageTitle } from "@/components/site/portal";
@@ -13,7 +14,7 @@ export const Route = createFileRoute("/programmas/")({
 function Programmas() {
   return (
     <>
-      <PageTitle kicker="Programma's" title={<>Alle <em>programma's</em></>} intro="Elke week iets anders: gesprekken, reportages en nieuws over ondernemen in Vlaanderen.">
+      <PageTitle kicker="Programma's" title={<>Alle <em>programma's</em></>} intro={`Elke week iets anders: gesprekken, reportages en nieuws over ondernemen in ${edition.region}.`}>
         <p className="mt-6 flex items-center gap-3 text-sm text-muted-foreground"><DemoBadge>Concept</DemoBadge>Dit zijn programmaconcepten voor de pilot, nog geen bestaande uitzendingen.</p>
       </PageTitle>
       <section className="container-x py-14">

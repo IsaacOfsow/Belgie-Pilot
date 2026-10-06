@@ -18,10 +18,12 @@ import zorg from "@/assets/theme-zorg.jpg";
 import internationaal from "@/assets/theme-internationaal.jpg";
 import scraped from "./news-feed.json";
 import { edition } from "@/config/edition";
-import { parseStatus, parseUrgency, type ArticleRecord, type PublicationStatus, type Urgency } from "./cms";
+import { parseStatus, parseUrgency, type ArticleRecord, type ArticleRecordAliases, type PublicationStatus, type Urgency } from "./cms";
 
 /** Toon een "Demo"-label bij voorbeeldartikels. Voor de pilot uit; zet op true om ze te markeren. */
-export const SHOW_DEMO_LABELS = false;
+export const SHOW_DEMO_LABELS = edition.pilot.enabled && edition.pilot.labelDemoArticles;
+/** Pilotmodus aan: demo-artikels krijgen op de artikelpagina een korte pilotnotitie. */
+export const PILOT_MODE = edition.pilot.enabled;
 /** Zodra de scraper minstens zoveel geldige berichten levert, verdwijnen alle voorbeeldartikels. */
 export const MIN_REAL_ITEMS = 6;
 
@@ -42,8 +44,10 @@ export type Article = {
   image: string;
   /** Eigen artikel: volledige tekst, één alinea per item. */
   body?: string[];
-  /** Verzameld artikel: bron met naam en link ("Bron" / "Bronlink"). */
-  source?: { name: string; url: string };
+  /** Verzameld artikel: bron met naam en link ("Bron" / "Originele bron"); `checked` = laatst gecontroleerd. */
+  source?: { name: string; url: string; checked?: string };
+  /** Voorbereide teksten voor social (LinkedIn/Facebook) en de status ervan. Nog niet gekoppeld. */
+  social?: { linkedin?: string; facebook?: string; status?: string };
   author?: string;
   featured?: boolean;
   video?: boolean;
@@ -108,39 +112,39 @@ export const editorial: Article[] = [
   },
 ];
 
-type Sample = { title: string; excerpt: string; category: string; publishedAt: string; time?: string; urgency?: Urgency; source: string; image?: string; video?: boolean };
+type Sample = { tags?: string[]; title: string; excerpt: string; category: string; publishedAt: string; time?: string; urgency?: Urgency; source: string; image?: string; video?: boolean };
 
 /** Fictieve voorbeeldberichten — alleen voor de pilot. Bronnen en inhoud zijn verzonnen. */
 const sampleRaw: Sample[] = [
-  { title: "Nieuwe steunmaatregel moet investeringen van kmo's versnellen", category: "kmo", publishedAt: "2026-10-06", time: "09:15", urgency: "hoog", source: "Kmo Kompas",
+  { tags: ["KMO","Beleid"], title: "Nieuwe steunmaatregel moet investeringen van kmo's versnellen", category: "kmo", publishedAt: "2026-10-06", time: "09:15", urgency: "hoog", source: "Kmo Kompas",
     excerpt: "Een nieuwe regeling wil investeringen in machines en digitalisering aantrekkelijker maken voor kleine bedrijven. Ondernemersorganisaties vragen vooral een eenvoudige aanvraagprocedure." },
-  { title: "Zorgsector zoekt versnelling bij digitale patiëntendossiers", category: "tech-ai", publishedAt: "2026-10-05", time: "14:20", source: "Regio Ondernemen", image: zorg,
+  { tags: ["Brussel","Zorg"], title: "Zorgsector zoekt versnelling bij digitale patiëntendossiers", category: "tech-ai", publishedAt: "2026-10-05", time: "14:20", source: "Regio Ondernemen", image: zorg,
     excerpt: "Brusselse zorgaanbieders willen sneller werken met gedeelde dossiers, maar botsen op uiteenlopende systemen en strenge privacyregels." },
   { title: "Europese regels voor verpakkingen worden strenger: wat verandert er?", category: "internationaal", publishedAt: "2026-10-05", time: "11:05", urgency: "hoog", source: "Pilot Wire",
     excerpt: "Nieuwe Europese verpakkingsregels dwingen producenten om materialen te herzien. Een overzicht van de belangrijkste deadlines en wat bedrijven nu al kunnen doen." },
   { title: "Debat over administratieve lasten: ondernemers vragen concrete stappen", category: "economie", publishedAt: "2026-10-04", time: "16:40", source: "Kmo Kompas", video: true, image: hero,
     excerpt: "In de Kamer botsten meerderheid en oppositie over de vereenvoudiging van administratieve verplichtingen. Ondernemers willen vooral duidelijke deadlines." },
-  { title: "Havenbedrijf investeert in elektrische kranen en walstroom", category: "duurzaamheid", publishedAt: "2026-10-03", time: "13:30", source: "Pilot Wire", image: innovatie,
+  { tags: ["Antwerpen","Haven"], title: "Havenbedrijf investeert in elektrische kranen en walstroom", category: "duurzaamheid", publishedAt: "2026-10-03", time: "13:30", source: "Pilot Wire", image: innovatie,
     excerpt: "Een Vlaamse haventerminal vervangt oudere dieselkranen door elektrische varianten. De investering moet uitstoot en geluid beperken." },
-  { title: "Vlaamse start-ups halen nieuwe financiering op", category: "start-ups", publishedAt: "2026-10-02", time: "12:00", source: "Regio Ondernemen", image: internationaal,
+  { tags: ["Gent","Leuven","Start-ups"], title: "Vlaamse start-ups halen nieuwe financiering op", category: "start-ups", publishedAt: "2026-10-02", time: "12:00", source: "Regio Ondernemen", image: internationaal,
     excerpt: "Jonge technologiebedrijven uit Vlaanderen sluiten financieringsrondes af. Investeerders wijzen op sterke technische teams en een groeiende klantenbasis." },
-  { title: "Brusselse horeca zoekt oplossingen voor personeelstekort", category: "arbeidsmarkt", publishedAt: "2026-10-01", time: "15:10", source: "Regio Ondernemen", image: familie,
+  { tags: ["Brussel","Horeca"], title: "Brusselse horeca zoekt oplossingen voor personeelstekort", category: "arbeidsmarkt", publishedAt: "2026-10-01", time: "15:10", source: "Regio Ondernemen", image: familie,
     excerpt: "Restaurants en hotels in de hoofdstad zoeken nieuwe manieren om medewerkers te vinden en te houden, van flexibele roosters tot interne opleidingen." },
   { title: "Energieprijzen en industrie: wat de laatste cijfers betekenen", category: "economie", publishedAt: "2026-10-01", time: "08:50", source: "Pilot Wire", image: vakmanschap,
     excerpt: "Een overzicht van de recente evolutie van de energiekosten en wat dat betekent voor energie-intensieve productiebedrijven in België." },
-  { title: "Vakmensen gezocht: opleidingscentra breiden aanbod uit", category: "arbeidsmarkt", publishedAt: "2026-09-30", time: "10:25", source: "Kmo Kompas", image: vakmanschap,
+  { tags: ["Limburg","Opleiding"], title: "Vakmensen gezocht: opleidingscentra breiden aanbod uit", category: "arbeidsmarkt", publishedAt: "2026-09-30", time: "10:25", source: "Kmo Kompas", image: vakmanschap,
     excerpt: "Opleidingscentra voor technische beroepen verwachten meer cursisten en breiden hun aanbod uit, in nauwe samenwerking met bedrijven." },
-  { title: "Circulaire economie: Vlaamse producenten delen restmaterialen", category: "duurzaamheid", publishedAt: "2026-09-30", time: "17:00", source: "Pilot Wire", image: duurzaamheid,
+  { tags: ["West-Vlaanderen","Circulair"], title: "Circulaire economie: Vlaamse producenten delen restmaterialen", category: "duurzaamheid", publishedAt: "2026-09-30", time: "17:00", source: "Pilot Wire", image: duurzaamheid,
     excerpt: "Een netwerk van Vlaamse producenten ruilt restmaterialen en bespaart zo grondstoffen en afvalkosten." },
-  { title: "Handelsmissie naar Scandinavië trekt recordaantal bedrijven", category: "internationaal", publishedAt: "2026-09-29", time: "09:40", source: "Regio Ondernemen", image: internationaal,
+  { tags: ["Export","Antwerpen"], title: "Handelsmissie naar Scandinavië trekt recordaantal bedrijven", category: "internationaal", publishedAt: "2026-09-29", time: "09:40", source: "Regio Ondernemen", image: internationaal,
     excerpt: "Een geplande handelsmissie naar Noord-Europa kent veel belangstelling van Belgische kmo's uit voeding, technologie en bouw." },
   { title: "Gesprek met een zaakvoerder over opvolging: 'Begin vroeg met praten'", category: "ondernemen", publishedAt: "2026-09-29", time: "18:15", source: "Pilot Wire", video: true, image: familie,
     excerpt: "Een zaakvoerder blikt terug op zijn overdracht en geeft tips aan collega's die binnenkort hetzelfde moeten doen." },
-  { title: "Bedrijfsvastgoed: vraag verschuift naar kleinere kantoren en logistieke ruimte", category: "vastgoed", publishedAt: "2026-10-05", time: "09:55", source: "Regio Ondernemen", image: zorg,
+  { tags: ["Antwerpen","Vastgoed"], title: "Bedrijfsvastgoed: vraag verschuift naar kleinere kantoren en logistieke ruimte", category: "vastgoed", publishedAt: "2026-10-05", time: "09:55", source: "Regio Ondernemen", image: zorg,
     excerpt: "Ondernemers zoeken minder vierkante meters kantoor en meer flexibele opslag- en productieruimte. Wat betekent dat voor huurprijzen en locatiekeuze?" },
-  { title: "Kmo's en financiering: waarmee houdt een bank rekening bij een kredietaanvraag?", category: "finance", publishedAt: "2026-10-04", time: "11:30", source: "Kmo Kompas", image: hero,
+  { tags: ["Gent","KMO"], title: "Kmo's en financiering: waarmee houdt een bank rekening bij een kredietaanvraag?", category: "finance", publishedAt: "2026-10-04", time: "11:30", source: "Kmo Kompas", image: hero,
     excerpt: "Een overzicht van de elementen die kredietverstrekkers bekijken, en hoe een ondernemer zijn dossier sterker kan maken." },
-  { title: "AI-tools in de boekhouding: wat kan een kleine zaak er nu mee?", category: "tech-ai", publishedAt: "2026-10-03", time: "08:20", source: "Pilot Wire", image: innovatie,
+  { tags: ["Leuven","AI"], title: "AI-tools in de boekhouding: wat kan een kleine zaak er nu mee?", category: "tech-ai", publishedAt: "2026-10-03", time: "08:20", source: "Pilot Wire", image: innovatie,
     excerpt: "Van het inlezen van facturen tot het opvolgen van betalingen: een nuchtere blik op wat slimme software vandaag wel en niet kan." },
 ];
 
@@ -152,7 +156,7 @@ const sampleRaw: Sample[] = [
  *                 status, urgency, tags, video_url, breaking_news, featured, language, region (zie src/content/cms.ts)
  * Zonder `status` geldt het item als gepubliceerd; met een andere status dan "published" wordt het niet getoond.
  */
-export type RawFeedItem = Partial<ArticleRecord> & {
+export type RawFeedItem = Partial<ArticleRecord> & Partial<ArticleRecordAliases> & {
   url?: string; source?: string; publishedAt?: string; excerpt?: string; video?: boolean; breaking?: boolean;
 };
 
@@ -175,6 +179,7 @@ export function fromFeed(raw: RawFeedItem): Article | null {
   const title = raw.title;
   const url = raw.source_url ?? raw.url;
   const sourceName = raw.source_name ?? raw.source;
+  const sourceChecked = raw.source_checked ? isoDay(raw.source_checked) : null;
   const dateRaw = raw.publication_date ?? raw.publishedAt;
   const day = dateRaw ? isoDay(dateRaw) : null;
   if (!title || !url || !sourceName || !day) return null;
@@ -182,13 +187,14 @@ export function fromFeed(raw: RawFeedItem): Article | null {
   const category = normalizeCategory(raw.category);
   const excerpt = stripHtml(raw.summary ?? raw.excerpt ?? "").slice(0, 220);
   const time = raw.publication_time ?? (dateRaw && dateRaw.includes("T") ? isoTime(dateRaw) : undefined);
-  const body = raw.article_body ? raw.article_body.split(/\n{2,}/).map((p) => stripHtml(p)).filter(Boolean) : [];
+  const articleText = raw.article_body ?? raw.article;
+  const body = articleText ? articleText.split(/\n{2,}/).map((p) => stripHtml(p)).filter(Boolean) : [];
   const video = raw.video || !!raw.video_url;
   return {
     slug: raw.slug ? slugify(raw.slug) : `${slugify(title)}-${hash(url)}`,
     title: stripHtml(title), excerpt, category, publishedAt: day,
-    image: raw.image || categoryImage[category] || hero,
-    source: { name: sourceName, url },
+    image: raw.image || raw.photo || categoryImage[category] || hero,
+    source: { name: sourceName, url, ...(sourceChecked ? { checked: sourceChecked } : {}) },
     urgency: parseUrgency(raw.urgency), status: "published",
     ...(time ? { publishedTime: time } : {}),
     ...(body.length ? { body } : {}),
@@ -197,6 +203,11 @@ export function fromFeed(raw: RawFeedItem): Article | null {
     ...(raw.breaking_news || raw.breaking ? { breaking: true } : {}),
     ...(raw.featured ? { featured: true } : {}),
     ...(raw.tags?.length ? { tags: raw.tags } : {}),
+    ...(raw.linkedin_text || raw.social_linkedin_text || raw.facebook_text || raw.social_facebook_text || raw.social_status ? { social: {
+      ...((raw.linkedin_text ?? raw.social_linkedin_text) ? { linkedin: (raw.linkedin_text ?? raw.social_linkedin_text) as string } : {}),
+      ...((raw.facebook_text ?? raw.social_facebook_text) ? { facebook: (raw.facebook_text ?? raw.social_facebook_text) as string } : {}),
+      ...(raw.social_status ? { status: raw.social_status } : {}),
+    } } : {}),
     ...(raw.language ? { language: raw.language } : {}),
     ...(raw.region ? { region: raw.region } : {}),
   };
@@ -207,6 +218,7 @@ const sampleFeed: Article[] = sampleRaw.map((s) => ({
   image: s.image ?? categoryImage[s.category] ?? hero,
   source: { name: s.source, url: "https://example.com/" }, demo: true, urgency: s.urgency ?? "normaal", status: "published",
   ...(s.time ? { publishedTime: s.time } : {}),
+  ...(s.tags ? { tags: s.tags } : {}),
   ...(s.video ? { video: true } : {}),
 }));
 
@@ -222,6 +234,8 @@ export const articles: Article[] = [...editorial.filter((a) => !a.demo || useSam
 
 export const articleBySlug = (slug: string) => articles.find((a) => a.slug === slug);
 export const categoryBySlug = (slug: string) => categories.find((c) => c.slug === slug);
+/** Artikels die bij een regio horen (via tags). */
+export const articlesInRegion = (label: string) => articles.filter((a) => a.tags?.some((t) => t.toLowerCase() === label.toLowerCase()));
 export const articlesIn = (category: string) => articles.filter((a) => a.category === category);
 
 const dateFmt = new Intl.DateTimeFormat(edition.language, { day: "numeric", month: "long", year: "numeric", timeZone: edition.timezone });

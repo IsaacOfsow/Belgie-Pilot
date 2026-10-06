@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { edition } from "@/config/edition";
 import { useMemo, useState } from "react";
 import { articles, categories } from "@/content/news";
 import { AdSlot, ArticleCard, PageTitle } from "@/components/site/portal";
@@ -22,7 +23,7 @@ function Nieuws() {
   const chip = (active: boolean) => cn("border px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] transition-colors", active ? "border-primary bg-primary text-primary-foreground" : "hover:border-primary hover:text-primary");
   return (
     <>
-      <PageTitle kicker="Nieuws" title={<>Het laatste <em>nieuws</em></>} intro="Nieuws voor Belgische ondernemers, per regio en onderwerp." />
+      <PageTitle kicker="Nieuws" title={<>Het laatste <em>nieuws</em></>} intro={`${edition.newsTheme}: per regio en onderwerp.`} />
       <section className="container-x py-12">
         <div className="grid gap-6 md:grid-cols-[1fr_2fr] md:items-end">
           <Search value={q} onChange={(v) => { setQ(v); setShown(PAGE); }} placeholder="Zoek in het nieuws" />

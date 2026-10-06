@@ -89,3 +89,20 @@ Kleurensysteem (alle tokens in `src/styles.css`):
 - **Partnercontent:** `SponsorLabel` (goud/navy, rustig) en `DemoBadge`.
 
 Contrast: navy op goud 9,2:1; grijze hulptekst op wit 5,8:1. Wit op `#E63946` haalt 4,2:1, net onder de AA-grens van 4,5:1 voor kleine tekst. Dat is de gevraagde combinatie; groter of dikker lettertype of een iets donkerder rood lost dit op. Foutmeldingen gebruiken een donkerdere rode tint (`--destructive`) voor leesbaarheid.
+
+## Review-ronde (senior pass)
+- `edition.pilot.enabled` (pilotMode) zet een pilotregel in de footer, een pilotnotitie bij demo-artikels en de demo-labels op live, schema, video's, carrousels en "Meest gelezen". `labelDemoArticles` labelt ook elk demo-artikel. Allebei uitzetten vóór productie.
+- `edition.regions` voedt de regionale module; `edition.countryCode`, `region`, `newsTheme` voeden teksten in header, footer en pagina's.
+- Nieuwe componenten (`src/components/site/modules.tsx`): LiveBanner, NewsTicker, LatestNewsList, MostReadList, VideoCard, CarouselContentCard, PartnerContentCard, CommercialCTA, RegionalModule, TodayForEntrepreneurs, ProductCard, UrgencyBadge, SponsorLabel, DemoBadge, CookieBanner.
+- Adverteren: zes hoofdproposities (`headline: true` in `src/content/portal.ts`), rest als secundaire lijst. Prijzen blijven `null` = "Prijs op aanvraag".
+- Volledige classificatie: `docs/AUDIT.md`.
+
+## Vereist vóór "L1 operationeel"
+1. Echte feed van Michael/Monday in `news-feed.json` (of API), met bronnen gecontroleerd en status "published".
+2. Echt domein, analytics (en daarmee echte "Meest gelezen"), cookiebanner gekoppeld aan echte tooling.
+3. Echte livestream (`edition.liveStream.embedUrl`) en echt programmaschema, of live verwijderd.
+4. Echte video's (`videoUrl`) en programma's; demo-items weg.
+5. Nieuwsbriefdienst gekoppeld (nu mailto) en adverteerformulier met echte afhandeling.
+6. Juridische teksten (privacy, cookies, voorwaarden, redactioneel beleid, bronnen) door jurist goedgekeurd.
+7. Productaanbod en prijzen van TV Media Partners; echte contactadressen; sociale kanalen.
+8. `pilot.enabled=false`, `initiative.approved` bevestigd, build + mobiele test + toegankelijkheidscheck.

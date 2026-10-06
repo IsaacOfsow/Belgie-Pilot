@@ -97,7 +97,7 @@ export function Header() {
 
         <div className="container-x flex h-[72px] items-center justify-between gap-6">
           <Logo />
-          <nav ref={navRef} aria-label="Hoofdmenu" className="hidden items-center gap-7 lg:flex">
+          <nav ref={navRef} aria-label="Hoofdmenu" className="hidden items-center gap-5 lg:flex">
             {navMain.map((n) =>
               n.children ? (
                 <div key={n.label} className="relative" onMouseEnter={() => setDrop(n.label)} onMouseLeave={() => setDrop(null)}>
@@ -107,7 +107,7 @@ export function Header() {
                   {drop === n.label && <Dropdown item={n} onNavigate={() => setDrop(null)} />}
                 </div>
               ) : (
-                <AnyLink key={n.label} to={n.to} className={linkCls} activeProps={{ className: activeCls }} activeOptions={{ exact: n.to === "/" }}>{n.label}</AnyLink>
+                <AnyLink key={n.label} to={n.to} {...(n.params ? { params: n.params } : {})} className={linkCls} activeProps={{ className: activeCls }} activeOptions={{ exact: n.to === "/" }}>{n.label}</AnyLink>
               ),
             )}
           </nav>
@@ -115,7 +115,7 @@ export function Header() {
             <Link to="/zoeken" aria-label="Zoeken" className="p-2 text-muted-foreground hover:text-foreground">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
             </Link>
-            <Link to="/adverteren" className={cn(btn(), "hidden sm:inline-flex !px-5 !py-2.5")}>Adverteren</Link>
+            <Link to="/nieuwsbrief" className={cn(btn(), "hidden xl:inline-flex !px-5 !py-2.5")}>Nieuwsbrief</Link>
             <button type="button" className="p-2 lg:hidden" aria-label="Menu openen" aria-expanded={open} onClick={() => setOpen(true)}>
               <span className="block h-0.5 w-6 bg-foreground" /><span className="mt-1.5 block h-0.5 w-6 bg-foreground" /><span className="mt-1.5 block h-0.5 w-4 bg-primary" />
             </button>
@@ -133,7 +133,7 @@ export function Header() {
             <ul>
               {navMain.map((n) => (
                 <li key={n.label} className="border-b">
-                  <AnyLink to={n.to} onClick={() => setOpen(false)} className="block py-3.5 font-serif text-3xl">{n.label}</AnyLink>
+                  <AnyLink to={n.to} {...(n.params ? { params: n.params } : {})} onClick={() => setOpen(false)} className="block py-3.5 font-serif text-3xl">{n.label}</AnyLink>
                   {n.children && (
                     <ul className="grid grid-cols-2 gap-x-4 pb-4">
                       {n.children.map((c) => (
@@ -145,10 +145,9 @@ export function Header() {
                   )}
                 </li>
               ))}
-              <li className="border-b"><Link to="/nieuwsbrief" onClick={() => setOpen(false)} className="block py-3.5 font-serif text-3xl">Nieuwsbrief</Link></li>
               <li className="border-b"><Link to="/zoeken" onClick={() => setOpen(false)} className="block py-3.5 font-serif text-3xl">Zoeken</Link></li>
             </ul>
-            <Link to="/adverteren" onClick={() => setOpen(false)} className={cn(btn(), "mt-8 w-full")}>Adverteren</Link>
+            <Link to="/nieuwsbrief" onClick={() => setOpen(false)} className={cn(btn(), "mt-8 w-full")}>Nieuwsbrief</Link>
           </nav>
         </div>
       )}

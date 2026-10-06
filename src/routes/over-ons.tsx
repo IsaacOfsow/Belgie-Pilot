@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { edition } from "@/config/edition";
 import { site } from "@/content/site";
 import { PageTitle } from "@/components/site/portal";
 import { btn } from "@/components/site/ui";
@@ -18,7 +19,7 @@ const blocks = [
 function OverOns() {
   return (
     <>
-      <PageTitle kicker="Over ons" title={<>Het platform voor <em>ondernemend Vlaanderen</em></>} intro={site.tagline + "."} />
+      <PageTitle kicker="Over ons" title={<>Het platform voor <em>ondernemend {edition.region}</em></>} intro={site.tagline + "."} />
       <section className="container-x py-14">
         <div className="grid gap-px border bg-border md:grid-cols-3">
           {blocks.map(([t, d]) => <div key={t} className="bg-background p-8"><p className="eyebrow">{t}</p><p className="mt-4 text-lg leading-relaxed">{d}</p></div>)}

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { edition } from "@/config/edition";
 import { videoModules, videos } from "@/content/video";
 import { DemoBadge, VideoCard } from "@/components/site/modules";
 import { AdSlot, PageTitle, SectionBar } from "@/components/site/portal";
@@ -13,7 +14,7 @@ function VideoPage() {
   const [lead, ...rest] = videos;
   return (
     <>
-      <PageTitle kicker="Video" title={<>Kijk naar <em>ondernemend Vlaanderen</em></>} intro="Nieuws, interviews en reportages voor ondernemers.">
+      <PageTitle kicker="Video" title={<>Kijk naar <em>ondernemend {edition.region}</em></>} intro="Nieuws, interviews en reportages voor ondernemers.">
         <p className="mt-6 flex items-center gap-3 text-sm text-muted-foreground"><DemoBadge>Demo</DemoBadge>De video's op deze pagina zijn voorbeelden; er zijn nog geen echte video's gekoppeld.</p>
       </PageTitle>
       <section className="container-x py-12">

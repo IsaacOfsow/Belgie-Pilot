@@ -17,9 +17,14 @@ export type EditionSource = { name: string; kind: SourceKind; feedUrl: string | 
 
 export type SocialKey = "linkedin" | "youtube" | "instagram" | "tiktok" | "facebook";
 
+export type EditionRegion = { slug: string; label: string };
+
 export type Edition = {
+  /** Pilotmodus: toont op bepaalde plaatsen dat inhoud demo is. Zet `enabled` uit voor productie. */
+  pilot: { enabled: boolean; labelDemoArticles: boolean };
   /** Land en regio van deze editie. */
   country: string;
+  countryCode: string;
   region: string;
   /** BCP-47 taalcode van de site, bv. nl-BE. */
   language: string;
@@ -51,19 +56,25 @@ export type Edition = {
   /** Livestream. null = geen stream gekoppeld, de site toont dan eerlijk "geen live-uitzending". */
   liveStream: { embedUrl: string | null };
   categories: EditionCategory[];
+  /** Categorieën in de hoofdnavigatie; de rest staat onder "Meer". */
+  navCategories: string[];
   newsSources: EditionSource[];
-  /** Plaatsnamen en regio's voor lokale herkenning in tags en zoekfuncties. */
-  places: string[];
+  /** Regio's voor de module "Ondernemen in …". Per editie anders (provincies, steden, bundesländer…). */
+  regions: EditionRegion[];
+  /** Redactionele rode draad, bv. "Nieuws uit ondernemend Vlaanderen". */
+  newsTheme: string;
 };
 
 export const flandersEdition: Edition = {
+  pilot: { enabled: true, labelDemoArticles: false }, // VOOR PRODUCTIE: enabled → false
   country: "België",
+  countryCode: "BE",
   region: "Vlaanderen",
   language: "nl-BE",
   primaryLanguage: "nl",
   secondaryLanguage: null, // later: "fr-BE" (Wallonië / Belgique francophone)
   brandName: "OndernemersTV Vlaanderen",
-  tagline: "Het zakelijke nieuws- en videoplatform voor ondernemend Vlaanderen",
+  tagline: "Zakelijk nieuws, video en live media voor ondernemend Vlaanderen",
   parentBrand: "OndernemersTV Nederland",
   domain: null, // PLACEHOLDER — domein nog niet toegewezen
   logoWordmark: { primary: "OndernemersTV", secondary: "Vlaanderen" },
@@ -80,18 +91,27 @@ export const flandersEdition: Edition = {
   categories: [
     { slug: "ondernemen", label: "Ondernemen", blurb: "Verhalen, praktijk en inzichten van Vlaamse ondernemers" },
     { slug: "economie", label: "Economie", blurb: "De Belgische en Vlaamse economie, beleid en conjunctuur" },
-    { slug: "kmo", label: "MKB & KMO", blurb: "Alles voor de zelfstandige en de kleine en middelgrote onderneming" },
+    { slug: "kmo", label: "KMO", blurb: "Alles voor de zelfstandige en de kleine en middelgrote onderneming" },
     { slug: "start-ups", label: "Start-ups & Scale-ups", blurb: "Jonge bedrijven, financiering en groei" },
     { slug: "tech-ai", label: "Tech & AI", blurb: "Technologie en artificiële intelligentie in de praktijk" },
     { slug: "finance", label: "Finance", blurb: "Financiering, beleggen, banken en fiscaliteit" },
     { slug: "vastgoed", label: "Vastgoed", blurb: "Bedrijfsvastgoed, bouw en woningmarkt" },
-    { slug: "arbeidsmarkt", label: "Werk & Arbeidsmarkt", blurb: "Personeel, opleiding en de arbeidsmarkt" },
+    { slug: "arbeidsmarkt", label: "Werk", blurb: "Personeel, opleiding en de arbeidsmarkt" },
     { slug: "duurzaamheid", label: "Duurzaamheid", blurb: "Energie, circulair ondernemen en klimaat" },
     { slug: "internationaal", label: "Internationaal", blurb: "Export, Europa en wereldhandel voor Belgische bedrijven" },
   ],
   // Bronnen zijn nog niet vastgesteld: de scraper (Michael) en TV Media Partners leveren de definitieve set.
+  navCategories: ["ondernemen", "economie", "kmo", "tech-ai"],
   newsSources: [],
-  places: ["Brussel", "Antwerpen", "Gent", "Leuven", "West-Vlaanderen", "Oost-Vlaanderen", "Limburg", "Vlaams-Brabant"],
+  regions: [
+    { slug: "antwerpen", label: "Antwerpen" },
+    { slug: "gent", label: "Gent" },
+    { slug: "brussel", label: "Brussel" },
+    { slug: "leuven", label: "Leuven" },
+    { slug: "west-vlaanderen", label: "West-Vlaanderen" },
+    { slug: "limburg", label: "Limburg" },
+  ],
+  newsTheme: "Nieuws uit ondernemend Vlaanderen",
 };
 
 /** De actieve editie. Een andere editie kiezen = deze ene regel aanpassen. */

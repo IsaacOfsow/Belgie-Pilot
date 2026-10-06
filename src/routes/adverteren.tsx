@@ -51,7 +51,7 @@ function Adverteren() {
       <PageTitle kicker="Adverteren & Samenwerken" title={<>Breng uw onderneming <em>in beeld</em></>}
         intro="Zakelijke zichtbaarheid via video, artikels en social media — bij ondernemers, kmo's en beslissers. Alles wat betaald is, blijft duidelijk herkenbaar en gescheiden van de redactie.">
         <div className="mt-8 flex flex-wrap gap-3">
-          <a href="#aanvragen" className={btn()}>Neem contact op</a>
+          <a href="#aanvragen" className={btn()}>Vraag mogelijkheden aan</a>
           <a href="#producten" className={btn({ variant: "outline" })}>Bekijk de mogelijkheden</a>
         </div>
       </PageTitle>
@@ -68,7 +68,16 @@ function Adverteren() {
         <p className="eyebrow">Mogelijkheden</p>
         <h2 className="mt-3 text-4xl md:text-5xl">Kies hoe u zichtbaar <em>wordt</em></h2>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">Prijzen zijn op aanvraag. We beloven geen bereik zolang er geen betrouwbare statistieken zijn.</p>
-        <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{products.map((p) => <ProductCard key={p.slug} p={p} />)}</ul>
+        <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{products.filter((p) => p.headline).map((p) => <ProductCard key={p.slug} p={p} />)}</ul>
+        <div className="mt-12 border-t pt-8">
+          <h3 className="text-xl">Ook mogelijk</h3>
+          <ul className="mt-4 grid gap-x-10 gap-y-3 text-sm sm:grid-cols-2">
+            {products.filter((p) => !p.headline).map((p) => (
+              <li key={p.slug} className="flex gap-3 border-b pb-3"><span className="font-head font-bold">{p.name}</span><span className="text-muted-foreground">{p.text}</span></li>
+            ))}
+          </ul>
+          <p className="mt-6"><a href="#aanvragen" className={btn()}>Vraag mogelijkheden aan</a></p>
+        </div>
       </section>
 
       <section className="border-y bg-surface">

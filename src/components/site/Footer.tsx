@@ -16,7 +16,7 @@ export function Footer() {
       <div className="container-x grid gap-10 border-b py-12 md:grid-cols-2 md:items-center">
         <div>
           <p className="eyebrow">Nieuwsbrief</p>
-          <h2 className="mt-2 text-3xl md:text-4xl">Blijf op de hoogte van <em>ondernemend Vlaanderen</em></h2>
+          <h2 className="mt-2 text-3xl md:text-4xl">Blijf op de hoogte van <em>ondernemend {edition.region}</em></h2>
         </div>
         <NewsletterForm />
       </div>
@@ -69,6 +69,9 @@ export function Footer() {
           <li><button type="button" onClick={() => window.dispatchEvent(new Event("open-cookie-settings"))} className="hover:text-foreground">Cookie-instellingen</button></li>
         </ul>
       </div>
+      {edition.pilot.enabled && (
+        <p className="container-x border-t pb-6 pt-4 text-xs text-muted-foreground">Pilotversie — voorbeeldinhoud, demo-onderdelen gemarkeerd. Nog geen live stream, analytics of betaalde producten gekoppeld.</p>
+      )}
     </footer>
   );
 }

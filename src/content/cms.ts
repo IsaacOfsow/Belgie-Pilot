@@ -35,6 +35,8 @@ export type ArticleRecord = {
   category: string; // slug of label
   source_name: string;
   source_url: string;
+  /** Laatst gecontroleerd (YYYY-MM-DD) — optioneel. */
+  source_checked: string;
   image: string;
   publication_date: string; // YYYY-MM-DD of ISO
   publication_time: string; // HH:mm
@@ -52,6 +54,9 @@ export type ArticleRecord = {
   breaking_news: boolean;
   qc: QualityControl;
 };
+
+/** Aliassen die de Monday-export gebruikt (de site begrijpt beide). */
+export type ArticleRecordAliases = { article: string; photo: string; source: string; linkedin_text: string; facebook_text: string };
 
 export const parseStatus = (v: unknown): PublicationStatus | null => {
   const s = String(v ?? "").toLowerCase().trim().replace(/[\s-]+/g, "_");

@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { articleBySlug, articles, categoryBySlug, formatDateTime, SHOW_DEMO_LABELS } from "@/content/news";
+import { articleBySlug, articles, categoryBySlug, formatDate, formatDateTime, PILOT_MODE, SHOW_DEMO_LABELS } from "@/content/news";
 import { videos } from "@/content/video";
 import { edition } from "@/config/edition";
 import { AdSlot, AnyLink, ArticleCard, NewsletterForm, SectionBar } from "@/components/site/portal";
@@ -85,13 +85,22 @@ function Artikel() {
               </div>
             )}
 
-            {/* Bronvermelding — altijd zichtbaar bij overgenomen berichten */}
+            {/* Bronvermelding — beschikbaar, maar niet dominant */}
             {a.source && (
-              <dl className="mt-8 grid gap-x-6 gap-y-1 border-y py-4 text-sm sm:grid-cols-[auto_1fr]">
+              <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 border-y py-4 text-sm">
                 <dt className="font-semibold text-muted-foreground">Bron</dt><dd>{a.source.name}</dd>
-                <dt className="font-semibold text-muted-foreground">Bronlink</dt>
-                <dd className="break-all"><a href={a.source.url} target="_blank" rel="noopener noreferrer nofollow" className="text-primary hover:text-foreground">{a.source.url}</a></dd>
+                {a.source.url && <>
+                  <dt className="font-semibold text-muted-foreground">Originele bron</dt>
+                  <dd className="min-w-0 break-words"><a href={a.source.url} target="_blank" rel="noopener noreferrer nofollow" className="text-primary hover:text-foreground">{a.source.url.replace(/^https?:\/\/(www\.)?/, "")} ↗</a></dd>
+                </>}
+                {a.source.checked && <>
+                  <dt className="font-semibold text-muted-foreground">Laatst gecontroleerd</dt>
+                  <dd>{formatDate(a.source.checked)}</dd>
+                </>}
               </dl>
+            )}
+            {PILOT_MODE && a.demo && !SHOW_DEMO_LABELS && (
+              <p className="mt-4 text-xs text-muted-foreground">Pilotversie: dit bericht is voorbeeldinhoud om de opzet van het platform te tonen.</p>
             )}
 
             {a.tags?.length ? <ul className="mt-6 flex flex-wrap gap-2">{a.tags.map((t) => <li key={t} className="border px-3 py-1 text-xs text-muted-foreground">{t}</li>)}</ul> : null}
@@ -107,7 +116,7 @@ function Artikel() {
 
             <div className="mt-12 border bg-surface p-6">
               <p className="eyebrow">Nieuwsbrief</p>
-              <h2 className="mt-2 text-2xl">Blijf op de hoogte van ondernemend Vlaanderen</h2>
+              <h2 className="mt-2 text-2xl">Blijf op de hoogte van ondernemend {edition.region}</h2>
               <div className="mt-5"><NewsletterForm /></div>
             </div>
             <div className="mt-12"><AdSlot size="leaderboard" /></div>

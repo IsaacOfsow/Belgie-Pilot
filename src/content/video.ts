@@ -11,15 +11,14 @@ import familie from "@/assets/theme-familie.jpg";
 import zorg from "@/assets/theme-zorg.jpg";
 import internationaal from "@/assets/theme-internationaal.jpg";
 
-export type VideoModule = "nieuws" | "interviews" | "ondernemer-van-de-week" | "tech-ai" | "business-explained" | "reportages";
+export type VideoModule = "nieuws" | "interviews" | "ondernemer-in-beeld" | "tech-ai" | "business-updates";
 
 export const videoModules: { id: VideoModule; label: string }[] = [
   { id: "nieuws", label: "OndernemersTV Nieuws" },
   { id: "interviews", label: "Interviews" },
-  { id: "ondernemer-van-de-week", label: "Ondernemer van de Week" },
+  { id: "ondernemer-in-beeld", label: "Ondernemer in Beeld" },
   { id: "tech-ai", label: "Tech & AI" },
-  { id: "business-explained", label: "Business Explained" },
-  { id: "reportages", label: "Reportages" },
+  { id: "business-updates", label: "Business Updates" },
 ];
 
 export type Video = {
@@ -33,13 +32,13 @@ export type Video = {
 
 export const videos: Video[] = [
   { slug: "nieuwsoverzicht-van-de-dag", title: "Het zakelijke nieuws van de dag in drie minuten", summary: "De belangrijkste economische en ondernemersberichten kort samengevat.", module: "nieuws", programme: "ondernemerstv-nieuws", duration: "3:12", publishedAt: "2026-10-06", image: hero, videoUrl: null, demo: true },
-  { slug: "ondernemer-van-de-week-metaalbedrijf", title: "Ondernemer van de week: van werkplaats naar groeibedrijf", summary: "Een zaakvoerder vertelt hoe een klein bedrijf stap voor stap groeide.", module: "ondernemer-van-de-week", programme: "ondernemer-van-de-week", duration: "12:40", publishedAt: "2026-10-05", image: vakmanschap, videoUrl: null, demo: true },
+  { slug: "ondernemer-van-de-week-metaalbedrijf", title: "Ondernemer van de week: van werkplaats naar groeibedrijf", summary: "Een zaakvoerder vertelt hoe een klein bedrijf stap voor stap groeide.", module: "ondernemer-in-beeld", programme: "ondernemer-van-de-week", duration: "12:40", publishedAt: "2026-10-05", image: vakmanschap, videoUrl: null, demo: true },
   { slug: "ai-in-de-kmo", title: "AI in de kmo: waar begin je?", summary: "Praktische eerste stappen met slimme software in een kleine onderneming.", module: "tech-ai", programme: "tech-ai-update", duration: "6:05", publishedAt: "2026-10-04", image: innovatie, videoUrl: null, demo: true },
-  { slug: "wat-is-een-kredietlijn", title: "Business Explained: wat is een kredietlijn?", summary: "Een heldere uitleg van een veelgebruikt financieringsmiddel.", module: "business-explained", programme: "business-update", duration: "4:30", publishedAt: "2026-10-03", image: hero, videoUrl: null, demo: true },
+  { slug: "wat-is-een-kredietlijn", title: "Business Explained: wat is een kredietlijn?", summary: "Een heldere uitleg van een veelgebruikt financieringsmiddel.", module: "business-updates", programme: "business-update", duration: "4:30", publishedAt: "2026-10-03", image: hero, videoUrl: null, demo: true },
   { slug: "interview-opvolging", title: "Interview: opvolging in een familiebedrijf", summary: "Twee generaties over loslaten, vertrouwen en afspraken.", module: "interviews", programme: "de-uitblinkers", duration: "9:20", publishedAt: "2026-10-02", image: familie, videoUrl: null, demo: true },
-  { slug: "reportage-haventerminal", title: "Reportage: een haventerminal in transitie", summary: "Achter de schermen bij een terminal die elektrificeert.", module: "reportages", programme: "ondernemer-in-beeld", duration: "14:15", publishedAt: "2026-10-01", image: duurzaamheid, videoUrl: null, demo: true },
+  { slug: "reportage-haventerminal", title: "Reportage: een haventerminal in transitie", summary: "Achter de schermen bij een terminal die elektrificeert.", module: "ondernemer-in-beeld", programme: "ondernemer-in-beeld", duration: "14:15", publishedAt: "2026-10-01", image: duurzaamheid, videoUrl: null, demo: true },
   { slug: "business-update-week", title: "Business Update: de economische week", summary: "Wat er deze week gebeurde, en wat dat voor ondernemers betekent.", module: "nieuws", programme: "business-update", duration: "5:48", publishedAt: "2026-09-30", image: internationaal, videoUrl: null, demo: true },
-  { slug: "zorgsector-digitaliseert", title: "Reportage: zorgaanbieders en digitale dossiers", summary: "Hoe zorgondernemers hun administratie digitaliseren.", module: "reportages", programme: "ondernemer-in-beeld", duration: "11:02", publishedAt: "2026-09-29", image: zorg, videoUrl: null, demo: true },
+  { slug: "zorgsector-digitaliseert", title: "Reportage: zorgaanbieders en digitale dossiers", summary: "Hoe zorgondernemers hun administratie digitaliseren.", module: "ondernemer-in-beeld", programme: "ondernemer-in-beeld", duration: "11:02", publishedAt: "2026-09-29", image: zorg, videoUrl: null, demo: true },
 ];
 export const videoBySlug = (slug: string) => videos.find((v) => v.slug === slug);
 
