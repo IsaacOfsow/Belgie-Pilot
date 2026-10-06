@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-serif: "Instrument Serif", Georgia, serif;
-  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-serif: "Archivo", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
   --radius-lg: var(--radius);
@@ -31,32 +31,39 @@
   --color-ring: var(--ring);
   --color-navy: var(--navy);
   --color-gold: var(--gold);
+  --color-green: var(--green);
+  --color-live: var(--live);
+  --color-surface: var(--surface);
 }
 
+/* Kleuren afgeleid van uitblinkers.tv (zwart + champagne-goud), ondernemers.tv (groen #00c89a, rood #ff1d05, goud #ab985c) */
 :root {
-  --radius: 2px;
-  --background: oklch(0.15 0.012 255);
-  --navy: oklch(0.21 0.045 258);
-  --foreground: oklch(0.95 0.012 85);
-  --card: oklch(0.19 0.022 256);
-  --card-foreground: oklch(0.95 0.012 85);
-  --popover: oklch(0.18 0.025 256);
-  --popover-foreground: oklch(0.95 0.012 85);
-  --primary: oklch(0.8 0.085 80);
-  --primary-foreground: oklch(0.16 0.015 255);
-  --gold: oklch(0.8 0.085 80);
-  --secondary: oklch(0.24 0.03 256);
-  --secondary-foreground: oklch(0.95 0.012 85);
-  --muted: oklch(0.22 0.02 256);
-  --muted-foreground: oklch(0.76 0.012 250);
-  --accent: oklch(0.26 0.04 256);
-  --accent-foreground: oklch(0.95 0.012 85);
-  --destructive: oklch(0.68 0.19 25);
+  --radius: 4px;
+  --background: oklch(0.13 0.003 60);
+  --surface: oklch(0.17 0.004 60);
+  --navy: oklch(0.17 0.004 60);
+  --foreground: oklch(0.97 0.006 80);
+  --card: oklch(0.19 0.004 60);
+  --card-foreground: oklch(0.97 0.006 80);
+  --popover: oklch(0.17 0.004 60);
+  --popover-foreground: oklch(0.97 0.006 80);
+  --primary: oklch(0.755 0.09 82);
+  --primary-foreground: oklch(0.11 0.003 60);
+  --gold: oklch(0.755 0.09 82);
+  --green: #00c89a;
+  --live: #ff1d05;
+  --secondary: oklch(0.24 0.006 60);
+  --secondary-foreground: oklch(0.97 0.006 80);
+  --muted: oklch(0.21 0.005 60);
+  --muted-foreground: oklch(0.72 0.015 80);
+  --accent: oklch(0.26 0.01 70);
+  --accent-foreground: oklch(0.97 0.006 80);
+  --destructive: #ff1d05;
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.95 0.012 85 / 12%);
-  --input: oklch(0.95 0.012 85 / 20%);
-  --ring: oklch(0.8 0.085 80);
-  --overlay: linear-gradient(180deg, oklch(0.12 0.02 255 / 55%) 0%, oklch(0.12 0.02 255 / 85%) 70%, var(--background) 100%);
+  --border: oklch(0.97 0.006 80 / 14%);
+  --input: oklch(0.97 0.006 80 / 22%);
+  --ring: oklch(0.755 0.09 82);
+  --overlay: linear-gradient(180deg, oklch(0.1 0.003 60 / 40%) 0%, oklch(0.1 0.003 60 / 85%) 75%, var(--background) 100%);
 }
 
 @layer base {
@@ -68,18 +75,32 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3 { font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.01em; line-height: 1.05; }
+  h1, h2, h3 { font-family: var(--font-serif); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
+  h1 em, h2 em, h3 em { font-style: normal; color: var(--primary); }
   :focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
   ::selection { background: var(--primary); color: var(--primary-foreground); }
 }
 
 @utility eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
-  letter-spacing: 0.24em;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--primary);
+}
+
+@utility badge-live {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: var(--live); color: #fff;
+  padding: 0.25rem 0.6rem; border-radius: 2px;
+  font-size: 0.65rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+}
+@utility badge-green {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: var(--green); color: oklch(0.13 0.003 60);
+  padding: 0.25rem 0.6rem; border-radius: 2px;
+  font-size: 0.65rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
 }
 
 @utility overlay-dark { background: var(--overlay); }

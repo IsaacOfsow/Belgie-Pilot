@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import type { Theme, Company, Episode } from "@/content/site";
 
 export const btn = cva(
-  "inline-flex items-center justify-center gap-2 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition-colors duration-300 rounded-sm",
+  "inline-flex items-center justify-center gap-2 px-6 py-3 text-xs font-bold uppercase tracking-[0.14em] transition-colors duration-300 rounded-sm",
   {
     variants: {
       variant: {
@@ -36,7 +36,7 @@ export function SectionHead({ num, eyebrow, title, children }: { num?: string; e
   return (
     <Reveal className="max-w-3xl">
       <p className="eyebrow">{num && <span className="mr-3 text-muted-foreground">{num}</span>}{eyebrow}</p>
-      <h2 className="mt-4 text-4xl md:text-6xl">{title}</h2>
+      <h2 className="mt-3 text-3xl md:text-5xl">{title}</h2>
       {children && <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{children}</p>}
     </Reveal>
   );
@@ -44,10 +44,10 @@ export function SectionHead({ num, eyebrow, title, children }: { num?: string; e
 
 export function PageHero({ eyebrow, title, intro, image }: { eyebrow: string; title: ReactNode; intro?: ReactNode; image?: string }) {
   return (
-    <section className="relative flex min-h-[62vh] items-end overflow-hidden border-b">
+    <section className="relative flex min-h-[44vh] items-end overflow-hidden border-b">
       {image && <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover" />}
       <div className={cn("absolute inset-0", image ? "overlay-dark" : "bg-navy")} />
-      <div className="container-x relative pb-16 pt-40">
+      <div className="container-x relative pb-14 pt-24">
         <p className="eyebrow">{eyebrow}</p>
         <h1 className="mt-5 max-w-4xl text-5xl md:text-7xl lg:text-8xl">{title}</h1>
         {intro && <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">{intro}</p>}
@@ -58,16 +58,16 @@ export function PageHero({ eyebrow, title, intro, image }: { eyebrow: string; ti
 
 export function ThemeCard({ t }: { t: Theme }) {
   return (
-    <Link to="/themas/$slug" params={{ slug: t.slug }} className="group block border bg-card transition-colors hover:border-primary/60">
-      <div className="relative aspect-[4/3] overflow-hidden">
+    <Link to="/themas/$slug" params={{ slug: t.slug }} className="group block overflow-hidden border bg-card transition-colors hover:border-primary/60">
+      <div className="relative aspect-[16/10] overflow-hidden">
         <img src={t.image} alt={t.title} loading="lazy" width={1024} height={768} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-        <div className="absolute inset-0 bg-background/30" />
-        <span className="absolute left-5 top-4 font-serif text-4xl text-foreground">{t.number}</span>
+        <div className="absolute inset-0 bg-background/20" />
+        <span className="badge-green absolute left-4 top-4">Thema {t.number}</span>
       </div>
-      <div className="p-6">
-        <h3 className="text-2xl md:text-3xl">{t.title}</h3>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{t.intro}</p>
-        <span className="mt-5 inline-block text-xs font-semibold uppercase tracking-[0.18em] text-primary">Ontdek thema →</span>
+      <div className="p-5">
+        <h3 className="text-xl md:text-2xl">{t.title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t.intro}</p>
+        <span className="mt-4 inline-block text-xs font-bold uppercase tracking-[0.14em] text-primary">Lees verder →</span>
       </div>
     </Link>
   );
@@ -75,14 +75,16 @@ export function ThemeCard({ t }: { t: Theme }) {
 
 export function CompanyCard({ c }: { c: Company }) {
   return (
-    <Link to="/verhalen/$slug" params={{ slug: c.slug }} className="group relative block aspect-[3/4] overflow-hidden border">
-      <img src={c.image} alt={c.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-      <div className="overlay-dark absolute inset-0" />
-      {c.demo && <span className="absolute right-4 top-4 border border-primary/60 bg-background/70 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-primary">Demo</span>}
-      <div className="absolute inset-x-0 bottom-0 p-6">
-        <p className="eyebrow">{c.sector}</p>
-        <h3 className="mt-2 text-2xl md:text-3xl">{c.name}</h3>
-        <p className="mt-2 text-sm text-muted-foreground">{c.summary}</p>
+    <Link to="/verhalen/$slug" params={{ slug: c.slug }} className="group block overflow-hidden border bg-card transition-colors hover:border-primary/60">
+      <div className="relative aspect-[16/10] overflow-hidden">
+        <img src={c.image} alt={c.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <div className="absolute inset-0 bg-background/20" />
+        <span className="absolute left-4 top-4 bg-primary px-2 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.14em] text-primary-foreground">{c.sector}</span>
+        {c.demo && <span className="absolute right-4 top-4 border border-primary/60 bg-background/80 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-primary">Demo</span>}
+      </div>
+      <div className="p-5">
+        <h3 className="text-xl md:text-2xl">{c.name}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{c.summary}</p>
       </div>
     </Link>
   );
@@ -90,11 +92,14 @@ export function CompanyCard({ c }: { c: Company }) {
 
 export function EpisodeCard({ e }: { e: Episode }) {
   return (
-    <Link to="/afleveringen/$slug" params={{ slug: e.slug }} className="group block border bg-card hover:border-primary/60">
-      <img src={e.thumbnail} alt={e.title} loading="lazy" className="aspect-video w-full object-cover" />
+    <Link to="/afleveringen/$slug" params={{ slug: e.slug }} className="group block overflow-hidden border bg-card transition-colors hover:border-primary/60">
+      <div className="relative">
+        <img src={e.thumbnail} alt={e.title} loading="lazy" className="aspect-video w-full object-cover" />
+        <span className="badge-live absolute left-4 top-4">Video</span>
+      </div>
       <div className="p-5">
         <p className="eyebrow">{e.season}{e.duration && ` · ${e.duration}`}</p>
-        <h3 className="mt-2 text-2xl">{e.title}</h3>
+        <h3 className="mt-2 text-xl md:text-2xl">{e.title}</h3>
         <p className="mt-2 text-sm text-muted-foreground">{e.summary}</p>
         {e.date && <p className="mt-3 text-xs text-muted-foreground">{e.date}</p>}
       </div>
@@ -119,7 +124,7 @@ export function ClosingCta({ title = "Heeft uw bedrijf een verhaal dat verteld m
       <div className="container-x py-24 text-center md:py-32">
         <Reveal>
           <p className="eyebrow">Redactie</p>
-          <h2 className="mx-auto mt-5 max-w-3xl text-4xl md:text-6xl">{title}</h2>
+          <h2 className="mx-auto mt-5 max-w-3xl text-3xl md:text-5xl">{title}</h2>
           <p className="mx-auto mt-6 max-w-xl text-muted-foreground">{text}</p>
           <Link to="/contact" className={cn(btn(), "mt-10")}>Vertel uw verhaal</Link>
         </Reveal>

@@ -19,7 +19,7 @@ import { btn } from "@/components/site/ui";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4 pt-20">
+    <div className="flex min-h-[80vh] items-center justify-center px-4">
       <div className="max-w-lg text-center">
         <p className="eyebrow">Fout 404</p>
         <h1 className="mt-4 text-6xl md:text-8xl">Niet gevonden</h1>
@@ -60,7 +60,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
