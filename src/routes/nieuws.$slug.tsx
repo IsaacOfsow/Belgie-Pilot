@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { articleBySlug, articles, categoryBySlug, formatDate } from "@/content/news";
+import { articleBySlug, articles, categoryBySlug, formatDate, SHOW_DEMO_LABELS } from "@/content/news";
 import { AdSlot, AnyLink, ArticleCard, SectionBar } from "@/components/site/portal";
 import { btn } from "@/components/site/ui";
 import { meta } from "@/lib/meta";
@@ -25,7 +25,7 @@ function Artikel() {
           <div className="container-x max-w-4xl py-12 md:py-16">
             <p className="flex items-center gap-3 text-xs">
               {cat && <AnyLink to="/rubriek/$slug" params={{ slug: cat.slug }} className="eyebrow hover:text-foreground">{cat.label}</AnyLink>}
-              {a.demo && <span className="border border-primary/50 px-1.5 py-0.5 font-bold uppercase tracking-[0.14em] text-primary">Demo</span>}
+              {a.demo && SHOW_DEMO_LABELS && <span className="border border-primary/50 px-1.5 py-0.5 font-bold uppercase tracking-[0.14em] text-primary">Demo</span>}
             </p>
             <h1 className="mt-4 text-4xl md:text-6xl">{a.title}</h1>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{a.excerpt}</p>

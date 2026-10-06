@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type FormEvent, type ReactNode } from "react";
-import { categoryBySlug, formatShort, type Article } from "@/content/news";
+import { categoryBySlug, formatShort, SHOW_DEMO_LABELS, type Article } from "@/content/news";
 import { site } from "@/content/site";
 import { btn } from "./ui";
 import { cn } from "@/lib/utils";
@@ -31,6 +31,7 @@ export function CategoryTag({ slug }: { slug: string }) {
 }
 
 function DemoTag() {
+  if (!SHOW_DEMO_LABELS) return null;
   return <span className="border border-primary/50 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-primary">Demo</span>;
 }
 
