@@ -28,18 +28,18 @@ export function UrgencyBadge({ urgency }: { urgency?: Urgency | undefined }) {
 export function LiveBanner() {
   const connected = !!edition.liveStream.embedUrl;
   const { now, next } = liveDemo;
-  const label = "block text-[0.65rem] font-bold uppercase tracking-[0.16em] text-muted-foreground";
+  const label = "block whitespace-nowrap text-[0.65rem] font-bold uppercase tracking-[0.16em] text-muted-foreground";
   return (
     <div className="theme-navy border-b bg-background">
-      <div className="container-x grid gap-4 py-4 md:grid-cols-[auto_1fr_auto] md:items-center md:gap-8">
+      <div className="container-x grid gap-4 py-4 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-8">
         <div className="flex flex-wrap items-center gap-3">
           <span className="badge-live"><span aria-hidden className="size-1.5 rounded-full bg-white" />Live</span>
           <span className="font-head text-base font-bold">{edition.brandName} Live</span>
           {!connected && <DemoBadge>Pilot · demo</DemoBadge>}
         </div>
-        <div className="grid grid-cols-2 gap-4 text-sm md:max-w-xl md:gap-8">
-          <p><span className={label}>Nu{now ? ` · ${now.time}` : ""}</span><span className="mt-0.5 block font-head font-bold">{now?.title}</span></p>
-          <p><span className={label}>Straks{next ? ` · ${next.time}` : ""}</span><span className="mt-0.5 block font-head font-bold">{next?.title}</span></p>
+        <div className="grid grid-cols-2 gap-4 text-sm lg:max-w-xl lg:gap-8">
+          <p className="min-w-0"><span className={label}>Nu{now ? ` · ${now.time}` : ""}</span><span className="mt-0.5 block font-head font-bold">{now?.title}</span></p>
+          <p className="min-w-0"><span className={label}>Straks{next ? ` · ${next.time}` : ""}</span><span className="mt-0.5 block font-head font-bold">{next?.title}</span></p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           {!connected && <span className="text-xs text-muted-foreground">Geen stream gekoppeld</span>}
