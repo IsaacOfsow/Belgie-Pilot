@@ -5,7 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-serif: "Archivo", "Inter", system-ui, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-head: "Archivo", "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
@@ -31,12 +32,12 @@
   --color-ring: var(--ring);
   --color-navy: var(--navy);
   --color-gold: var(--gold);
-  --color-green: var(--green);
+  --color-teal: var(--teal);
   --color-live: var(--live);
   --color-surface: var(--surface);
 }
 
-/* Kleuren afgeleid van uitblinkers.tv (zwart + champagne-goud), ondernemers.tv (groen #00c89a, rood #ff1d05, goud #ab985c) */
+/* Kleuren afgeleid van uitblinkers.tv: warm zwart, champagne-goud en teal */
 :root {
   --radius: 4px;
   --background: oklch(0.13 0.003 60);
@@ -50,15 +51,16 @@
   --primary: oklch(0.755 0.09 82);
   --primary-foreground: oklch(0.11 0.003 60);
   --gold: oklch(0.755 0.09 82);
-  --green: #00c89a;
-  --live: #ff1d05;
+  --teal: oklch(0.62 0.07 200);
+  --live: oklch(0.6 0.19 28);
+  --champagne: oklch(0.88 0.07 85);
   --secondary: oklch(0.24 0.006 60);
   --secondary-foreground: oklch(0.97 0.006 80);
   --muted: oklch(0.21 0.005 60);
   --muted-foreground: oklch(0.72 0.015 80);
   --accent: oklch(0.26 0.01 70);
   --accent-foreground: oklch(0.97 0.006 80);
-  --destructive: #ff1d05;
+  --destructive: oklch(0.6 0.19 28);
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.97 0.006 80 / 14%);
   --input: oklch(0.97 0.006 80 / 22%);
@@ -75,8 +77,9 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3 { font-family: var(--font-serif); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
-  h1 em, h2 em, h3 em { font-style: normal; color: var(--primary); }
+  h1, h2 { font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.01em; line-height: 1.04; }
+  h3, h4 { font-family: var(--font-head); font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; }
+  h1 em, h2 em { font-style: italic; color: var(--primary); }
   :focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
   ::selection { background: var(--primary); color: var(--primary-foreground); }
 }
@@ -96,12 +99,14 @@
   padding: 0.25rem 0.6rem; border-radius: 2px;
   font-size: 0.65rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
 }
-@utility badge-green {
+@utility badge-teal {
   display: inline-flex; align-items: center; gap: 0.4rem;
-  background: var(--green); color: oklch(0.13 0.003 60);
+  background: var(--teal); color: oklch(0.98 0.005 80);
   padding: 0.25rem 0.6rem; border-radius: 2px;
   font-size: 0.65rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
 }
+
+@utility rule-gold { border-top: 2px solid var(--primary); }
 
 @utility overlay-dark { background: var(--overlay); }
 

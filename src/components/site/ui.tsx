@@ -62,7 +62,7 @@ export function ThemeCard({ t }: { t: Theme }) {
       <div className="relative aspect-[16/10] overflow-hidden">
         <img src={t.image} alt={t.title} loading="lazy" width={1024} height={768} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="absolute inset-0 bg-background/20" />
-        <span className="badge-green absolute left-4 top-4">Thema {t.number}</span>
+        <span className="badge-teal absolute left-4 top-4">Thema {t.number}</span>
       </div>
       <div className="p-5">
         <h3 className="text-xl md:text-2xl">{t.title}</h3>
