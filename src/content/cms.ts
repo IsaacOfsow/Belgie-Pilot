@@ -15,6 +15,12 @@ export const statusLabels: Record<PublicationStatus, string> = {
   draft: "Concept", ai_generated: "AI-gegenereerd", needs_review: "Nakijken nodig", approved: "Goedgekeurd", published: "Gepubliceerd", rejected: "Afgekeurd",
 };
 
+/** Soort artikel: nieuwsbericht, achtergrondstuk of uitleg. Zonder waarde geldt "nieuws". */
+export const kinds = ["nieuws", "achtergrond", "uitleg"] as const;
+export type ArticleKind = (typeof kinds)[number];
+export const kindLabels: Record<ArticleKind, string> = { nieuws: "Nieuws", achtergrond: "Achtergrond", uitleg: "Uitleg" };
+export const parseKind = (v?: string): ArticleKind | undefined => kinds.find((k) => k === (v ?? "").toLowerCase().trim());
+
 /** Urgentie zoals in de Newsmonitor. */
 export const urgencies = ["normaal", "hoog", "breaking"] as const;
 export type Urgency = (typeof urgencies)[number];
@@ -45,6 +51,8 @@ export type ArticleRecord = {
   social_facebook_text: string;
   social_status: SocialStatus;
   urgency: Urgency;
+  /** nieuws | achtergrond | uitleg (optioneel). */
+  article_type: ArticleKind;
   language: string; // bv. nl-BE
   country: string;
   region: string;

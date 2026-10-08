@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { edition } from "@/config/edition";
 import { useState, type FormEvent, type ReactNode } from "react";
-import { categoryBySlug, formatShort, formatStamp, SHOW_DEMO_LABELS, type Article } from "@/content/news";
+import { categoryBySlug, formatShort, formatStamp, readingMinutes, SHOW_DEMO_LABELS, type Article } from "@/content/news";
+import { kindLabels } from "@/content/cms";
 import { site } from "@/content/site";
 import { btn } from "./ui";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,15 @@ export function CategoryTag({ slug }: { slug: string }) {
   if (!c) return null;
   return <span className="eyebrow inline-flex items-center gap-2 !text-[0.65rem]"><span aria-hidden className="h-3 w-[3px] bg-gold" />{c.label}</span>;
 }
+
+/** "Achtergrond" / "Uitleg" — alleen voor stukken die geen gewoon nieuwsbericht zijn. */
+function KindTag({ a }: { a: Pick<Article, "kind"> }) {
+  if (!a.kind || a.kind === "nieuws") return null;
+  return <span className="border border-foreground/30 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.14em]">{kindLabels[a.kind]}</span>;
+}
+
+/** Auteur/bron · datum · leestijd (leestijd alleen bij artikels met volledige tekst). */
+const metaLine = (a: Article) => [a.author ?? a.source?.name, formatShort(a.publishedAt), readingMinutes(a) ? `${readingMinutes(a)} min` : null].filter(Boolean).join(" · ");
 
 function DemoTag() {
   if (!SHOW_DEMO_LABELS) return null;
@@ -62,7 +72,7 @@ export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "ca
           {a.video && <span className="badge-live absolute left-3 top-3">Video</span>}
         </div>
         <div className="mt-4">
-          <div className="flex items-center gap-3"><CategoryTag slug={a.category} />{a.demo && <DemoTag />}</div>
+          <div className="flex items-center gap-3"><CategoryTag slug={a.category} /><KindTag a={a} />{a.demo && <DemoTag />}</div>
           <h3 className="mt-2 font-serif text-2xl font-normal leading-[1.1] group-hover:underline md:text-3xl">{a.title}</h3>
           <p className="mt-2 line-clamp-3 leading-relaxed text-muted-foreground">{a.excerpt}</p>
           <p className="mt-3 text-xs text-muted-foreground">{a.author ?? a.source?.name} · {formatStamp(a)}</p>
@@ -100,10 +110,10 @@ export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "ca
         {a.video && <span className="badge-live absolute left-3 top-3">Video</span>}
       </div>
       <div className="p-5">
-        <div className="flex items-center gap-3"><CategoryTag slug={a.category} />{a.demo && <DemoTag />}</div>
+        <div className="flex items-center gap-3"><CategoryTag slug={a.category} /><KindTag a={a} />{a.demo && <DemoTag />}</div>
         <h3 className="mt-2 text-lg group-hover:text-primary md:text-xl">{a.title}</h3>
         <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">{a.excerpt}</p>
-        <p className="mt-4 text-xs text-muted-foreground">{a.author ?? a.source?.name} · {formatShort(a.publishedAt)}</p>
+        <p className="mt-4 text-xs text-muted-foreground">{metaLine(a)}</p>
       </div>
     </Link>
   );

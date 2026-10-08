@@ -48,5 +48,5 @@ export const carousels: Carousel[] = [
   { id: "c1", title: "3 cijfers over de Belgische economie", slides: 5, label: "Economie", image: hero, demo: true },
   { id: "c2", title: "Zo start je een bv in Vlaanderen", slides: 7, label: "Ondernemen", image: vakmanschap, demo: true },
   { id: "c3", title: "AI-tools voor kleine bedrijven", slides: 6, label: "Tech & AI", image: innovatie, demo: true },
-  { id: "c4", title: "Kmo-financiering in vijf stappen", slides: 5, label: "Finance", image: familie, demo: true },
+  { id: "c4", title: "Kmo-financiering in vijf stappen", slides: 5, label: "Financiering", image: familie, demo: true },
 ];

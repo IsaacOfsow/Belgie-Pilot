@@ -48,3 +48,7 @@ Dezelfde feed begrijpt ook de Monday-veldnamen uit `src/content/cms.ts`, zodat e
   (`MIN_REAL_ITEMS` in `src/content/news.ts`).
 - Voor verzamelde berichten toont de site kop, korte samenvatting en een link naar de bron. Neem geen volledige
   artikelteksten of afbeeldingen over zonder toestemming van de bron.
+
+## Soort artikel (optioneel)
+Veld `article_type` (of `kind`): `nieuws` (standaard), `achtergrond` of `uitleg`. Achtergrond- en uitlegstukken verschijnen op `/achtergrond` en in het homepageblok "Achtergrond".
+Categorie `groei-strategie` (Groei & strategie) is toegevoegd; `finance` heet "Financiering".

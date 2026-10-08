@@ -15,7 +15,7 @@ export function Logo() {
       ) : (
         <>
           <span className="font-serif text-2xl leading-none sm:text-3xl">{edition.logoWordmark.primary}</span>
-          <span className="eyebrow !text-[0.62rem]">{edition.logoWordmark.secondary}</span>
+          <span className="eyebrow hidden !text-[0.62rem] min-[400px]:inline">{edition.logoWordmark.secondary}</span>
         </>
       )}
     </Link>
@@ -37,19 +37,9 @@ function useToday() {
 }
 
 function Dropdown({ item, onNavigate }: { item: NavItem; onNavigate: () => void }) {
-  const collapsed = navMain.filter((n) => n.collapsible);
   return (
     <div className="absolute right-0 top-full z-50 w-80 pt-3 xl:left-1/2 xl:right-auto xl:-translate-x-1/2">
       <ul className="border bg-popover p-2 shadow-2xl">
-        {/* Op lg-breedte staan deze items niet in de hoofdbalk */}
-        {collapsed.map((c) => (
-          <li key={`c-${c.label}`} className="xl:hidden">
-            <AnyLink to={c.to} {...(c.params ? { params: c.params } : {})} onClick={onNavigate} className="block px-4 py-2.5 hover:bg-accent">
-              <span className="block text-sm font-semibold">{c.label}</span>
-            </AnyLink>
-          </li>
-        ))}
-        {collapsed.length > 0 && <li aria-hidden className="mx-4 my-1 border-t xl:hidden" />}
         {item.children?.map((c) => (
           <li key={c.label}>
             <AnyLink to={c.to} {...(c.params ? { params: c.params } : {})} onClick={onNavigate} className="block px-4 py-2.5 hover:bg-accent">
@@ -59,6 +49,31 @@ function Dropdown({ item, onNavigate }: { item: NavItem; onNavigate: () => void 
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+/**
+ * Marktstrook bovenaan (zoals ondernemerstv.nl). Toont alleen de instrumenten uit de editie-configuratie;
+ * zolang er geen databron gekoppeld is, blijven de waarden leeg ("—") — er worden nooit koersen verzonnen.
+ */
+function MarketStrip({ today }: { today: string }) {
+  const hasData = edition.markets.some((m) => m.value);
+  return (
+    <div className="theme-navy border-b bg-surface">
+      <div className="container-x flex h-9 items-center justify-between gap-6 text-xs">
+        <ul aria-label="Markten" className="flex min-w-0 items-center gap-5 overflow-x-auto whitespace-nowrap">
+          {edition.markets.map((m) => (
+            <li key={m.label} className="flex shrink-0 items-baseline gap-2">
+              <span className="font-semibold uppercase tracking-[0.1em] text-muted-foreground">{m.label}</span>
+              <span className="font-head font-bold tabular-nums">{m.value ?? "—"}</span>
+              {m.change && <span className="tabular-nums text-muted-foreground">{m.change}</span>}
+            </li>
+          ))}
+          {!hasData && <li className="shrink-0 border border-primary/50 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-primary">Pilot · koersen volgen</li>}
+        </ul>
+        <p suppressHydrationWarning className="hidden shrink-0 text-muted-foreground md:block">{today}</p>
+      </div>
     </div>
   );
 }
@@ -83,31 +98,12 @@ export function Header() {
 
   return (
     <>
-      {/* Bovenbalk: live-status */}
-      <div className="theme-navy border-b bg-surface">
-        <div className="container-x flex h-10 items-center justify-between gap-4 text-xs">
-          <p className="flex min-w-0 items-center gap-3">
-            <Link to="/live" className="badge-live shrink-0"><span aria-hidden className="size-1.5 rounded-full bg-white" />Live</Link>
-            <span className="truncate text-muted-foreground">{site.season}</span>
-          </p>
-          <Link to="/adverteren" className="hidden shrink-0 font-bold uppercase tracking-[0.14em] text-primary hover:text-foreground sm:block">Adverteren →</Link>
-        </div>
-      </div>
+      <MarketStrip today={today} />
 
       <header className="theme-navy sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-        {/* Servicerij */}
-        <div className="container-x hidden h-9 items-center justify-between border-b text-[0.72rem] text-muted-foreground md:flex">
-          <p className="flex items-center gap-5">
-            <Link to="/nieuwsbrief" className="font-semibold uppercase tracking-[0.14em] hover:text-foreground">Nieuwsbrief</Link>
-            <Link to="/podcast" className="font-semibold uppercase tracking-[0.14em] hover:text-foreground">Podcasts</Link>
-            {site.socials.map((s) => <a key={s.href} href={s.href} className="font-semibold uppercase tracking-[0.14em] hover:text-foreground">{s.label}</a>)}
-          </p>
-          <p suppressHydrationWarning>{today}</p>
-        </div>
-
         <div className="container-x flex h-[72px] items-center justify-between gap-5 xl:gap-6">
           <Logo />
-          <nav ref={navRef} aria-label="Hoofdmenu" className="hidden min-w-0 items-center gap-5 lg:flex xl:gap-4">
+          <nav ref={navRef} aria-label="Hoofdmenu" className="hidden min-w-0 items-center gap-6 lg:flex xl:gap-8">
             {navMain.map((n) =>
               n.children ? (
                 <div key={n.label} className="relative shrink-0" onMouseEnter={() => setDrop(n.label)} onMouseLeave={() => setDrop(null)}>
@@ -118,15 +114,16 @@ export function Header() {
                   {drop === n.label && <Dropdown item={n} onNavigate={() => setDrop(null)} />}
                 </div>
               ) : (
-                <AnyLink key={n.label} to={n.to} {...(n.params ? { params: n.params } : {})} className={cn(linkCls, n.collapsible && "hidden xl:inline-flex")} activeProps={{ className: activeCls }} activeOptions={{ exact: n.to === "/" }}>{n.label}</AnyLink>
+                <AnyLink key={n.label} to={n.to} {...(n.params ? { params: n.params } : {})} className={linkCls} activeProps={{ className: activeCls }} activeOptions={{ exact: n.to === "/" }}>{n.label}</AnyLink>
               ),
             )}
           </nav>
           <div className="flex shrink-0 items-center gap-2">
-            <Link to="/zoeken" aria-label="Zoeken" className="p-2 text-muted-foreground hover:text-foreground">
+            <Link to="/zoeken" aria-label="Zoeken" className="hidden p-2 text-muted-foreground hover:text-foreground sm:block">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
             </Link>
-            <Link to="/nieuwsbrief" className={cn(btn(), "hidden whitespace-nowrap xl:inline-flex !px-4 !py-2.5")}>Nieuwsbrief</Link>
+            <Link to="/live" className={cn(btn({ variant: "live" }), "whitespace-nowrap !px-4 !py-2.5")}><span aria-hidden>▶</span> <span className="sm:hidden">Live</span><span className="hidden sm:inline">Kijk live</span></Link>
+            <Link to="/nieuwsbrief" className={cn(btn({ variant: "outline" }), "hidden whitespace-nowrap xl:inline-flex !px-4 !py-2.5")}>Nieuwsbrief</Link>
             <button type="button" className="p-2 lg:hidden" aria-label="Menu openen" aria-expanded={open} onClick={() => setOpen(true)}>
               <span className="block h-0.5 w-6 bg-foreground" /><span className="mt-1.5 block h-0.5 w-6 bg-foreground" /><span className="mt-1.5 block h-0.5 w-4 bg-primary" />
             </button>
@@ -158,7 +155,8 @@ export function Header() {
               ))}
               <li className="border-b"><Link to="/zoeken" onClick={() => setOpen(false)} className="block py-3.5 font-serif text-3xl">Zoeken</Link></li>
             </ul>
-            <Link to="/nieuwsbrief" onClick={() => setOpen(false)} className={cn(btn(), "mt-8 w-full")}>Nieuwsbrief</Link>
+            <Link to="/live" onClick={() => setOpen(false)} className={cn(btn({ variant: "live" }), "mt-8 w-full")}>▶ Kijk live</Link>
+            <Link to="/nieuwsbrief" onClick={() => setOpen(false)} className={cn(btn(), "mt-3 w-full")}>Nieuwsbrief</Link>
           </nav>
         </div>
       )}

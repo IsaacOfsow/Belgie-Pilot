@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { articlesIn, articlesInRegion, formatShort, formatStamp, SHOW_DEMO_LABELS, type Article } from "@/content/news";
+import { articlesIn, articlesInRegion, articlesInSegment, formatShort, formatStamp, SHOW_DEMO_LABELS, type Article } from "@/content/news";
 import { urgencyLabels, type Urgency } from "@/content/cms";
 import { liveDemo, priceLabel, programmeBySlug, todayBlocks, type Product } from "@/content/portal";
 import type { Carousel, Video } from "@/content/video";
@@ -244,5 +244,30 @@ export function ProductCard({ p }: { p: Product }) {
       <p className="mt-5 font-head text-sm font-bold">{priceLabel(p.price)}</p>
       <Link to="/adverteren" hash="aanvragen" className="mt-2 text-xs font-bold uppercase tracking-[0.14em] text-primary hover:text-foreground">Vraag mogelijkheden aan →</Link>
     </li>
+  );
+}
+
+/**
+ * "Voor jouw type onderneming" — tabs per segment (Starters & zelfstandigen · KMO · Scale-up & corporate)
+ * met drie artikels per tab. Segmenten en hun categorieën staan in src/config/edition.ts.
+ */
+export function SegmentSection() {
+  const [active, setActive] = useState(edition.segments[0]?.slug ?? "");
+  const list = articlesInSegment(active).slice(0, 3);
+  return (
+    <section className="container-x py-10">
+      <SectionBar title="Voor jouw type onderneming" />
+      <div role="tablist" aria-label="Type onderneming" className="mt-5 flex flex-wrap gap-2">
+        {edition.segments.map((s) => (
+          <button key={s.slug} type="button" role="tab" id={`seg-tab-${s.slug}`} aria-selected={active === s.slug} aria-controls="seg-panel" onClick={() => setActive(s.slug)}
+            className={cn("border px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] transition-colors", active === s.slug ? "border-primary bg-gold text-[color:var(--on-accent)]" : "bg-background hover:border-primary")}>
+            {s.label}
+          </button>
+        ))}
+      </div>
+      <div id="seg-panel" role="tabpanel" aria-labelledby={`seg-tab-${active}`} className="mt-6 grid gap-6 md:grid-cols-3">
+        {list.length ? list.map((a) => <ArticleCard key={a.slug} a={a} />) : <p className="text-sm text-muted-foreground md:col-span-3">Voor dit segment is er nog geen nieuws.</p>}
+      </div>
+    </section>
   );
 }

@@ -18,6 +18,10 @@ export type EditionSource = { name: string; kind: SourceKind; feedUrl: string | 
 export type SocialKey = "linkedin" | "youtube" | "instagram" | "tiktok" | "facebook";
 
 export type EditionRegion = { slug: string; label: string };
+/** Segment voor "Voor jouw type onderneming": groepeert categorieën. */
+export type EditionSegment = { slug: string; label: string; categories: string[] };
+/** Marktstrook bovenaan. `value` blijft null tot er een gekoppelde databron is — nooit verzonnen koersen. */
+export type EditionMarket = { label: string; value: string | null; change: string | null };
 
 export type Edition = {
   /** Pilotmodus: toont op bepaalde plaatsen dat inhoud demo is. Zet `enabled` uit voor productie. */
@@ -63,6 +67,10 @@ export type Edition = {
   regions: EditionRegion[];
   /** Redactionele rode draad, bv. "Nieuws uit ondernemend Vlaanderen". */
   newsTheme: string;
+  /** Segmenten voor de homepage-module "Voor jouw type onderneming". */
+  segments: EditionSegment[];
+  /** Instrumenten in de marktstrook. Geen databron gekoppeld → waarden blijven leeg. */
+  markets: EditionMarket[];
 };
 
 export const flandersEdition: Edition = {
@@ -92,16 +100,17 @@ export const flandersEdition: Edition = {
     { slug: "ondernemen", label: "Ondernemen", blurb: "Verhalen, praktijk en inzichten van Vlaamse ondernemers" },
     { slug: "economie", label: "Economie", blurb: "De Belgische en Vlaamse economie, beleid en conjunctuur" },
     { slug: "kmo", label: "KMO", blurb: "Alles voor de zelfstandige en de kleine en middelgrote onderneming" },
+    { slug: "groei-strategie", label: "Groei & strategie", blurb: "Groeien, internationaliseren en strategische keuzes voor ondernemers" },
     { slug: "start-ups", label: "Start-ups & Scale-ups", blurb: "Jonge bedrijven, financiering en groei" },
     { slug: "tech-ai", label: "Tech & AI", blurb: "Technologie en artificiële intelligentie in de praktijk" },
-    { slug: "finance", label: "Finance", blurb: "Financiering, beleggen, banken en fiscaliteit" },
+    { slug: "finance", label: "Financiering", blurb: "Financiering, beleggen, banken en fiscaliteit" },
     { slug: "vastgoed", label: "Vastgoed", blurb: "Bedrijfsvastgoed, bouw en woningmarkt" },
     { slug: "arbeidsmarkt", label: "Werk", blurb: "Personeel, opleiding en de arbeidsmarkt" },
     { slug: "duurzaamheid", label: "Duurzaamheid", blurb: "Energie, circulair ondernemen en klimaat" },
     { slug: "internationaal", label: "Internationaal", blurb: "Export, Europa en wereldhandel voor Belgische bedrijven" },
   ],
   // Bronnen zijn nog niet vastgesteld: de scraper (Michael) en TV Media Partners leveren de definitieve set.
-  navCategories: ["ondernemen", "economie", "kmo", "tech-ai"],
+  navCategories: ["groei-strategie", "finance"],
   newsSources: [],
   regions: [
     { slug: "antwerpen", label: "Antwerpen" },
@@ -112,6 +121,18 @@ export const flandersEdition: Edition = {
     { slug: "limburg", label: "Limburg" },
   ],
   newsTheme: "Nieuws uit ondernemend Vlaanderen",
+  segments: [
+    { slug: "starters", label: "Starters & zelfstandigen", categories: ["ondernemen", "start-ups"] },
+    { slug: "kmo", label: "KMO", categories: ["kmo", "arbeidsmarkt", "finance"] },
+    { slug: "scale-up", label: "Scale-up & corporate", categories: ["groei-strategie", "internationaal", "tech-ai", "economie"] },
+  ],
+  markets: [
+    { label: "Bel 20", value: null, change: null },
+    { label: "Euro Stoxx 50", value: null, change: null },
+    { label: "DAX", value: null, change: null },
+    { label: "Brent-olie", value: null, change: null },
+    { label: "EUR/USD", value: null, change: null },
+  ], // PLACEHOLDER — koppel een marktdata-bron; tot dan toont de strook geen koersen
 };
 
 /** De actieve editie. Een andere editie kiezen = deze ene regel aanpassen. */

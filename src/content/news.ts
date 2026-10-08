@@ -18,7 +18,7 @@ import zorg from "@/assets/theme-zorg.jpg";
 import internationaal from "@/assets/theme-internationaal.jpg";
 import scraped from "./news-feed.json";
 import { edition } from "@/config/edition";
-import { parseStatus, parseUrgency, type ArticleRecord, type ArticleRecordAliases, type PublicationStatus, type Urgency } from "./cms";
+import { parseKind, parseStatus, parseUrgency, type ArticleKind, type ArticleRecord, type ArticleRecordAliases, type PublicationStatus, type Urgency } from "./cms";
 
 /** Toon een "Demo"-label bij voorbeeldartikels. Voor de pilot uit; zet op true om ze te markeren. */
 export const SHOW_DEMO_LABELS = edition.pilot.enabled && edition.pilot.labelDemoArticles;
@@ -53,6 +53,8 @@ export type Article = {
   video?: boolean;
   videoUrl?: string;
   urgency?: Urgency;
+  /** Soort stuk: nieuws (standaard), achtergrond of uitleg. */
+  kind?: ArticleKind;
   breaking?: boolean;
   tags?: string[];
   language?: string;
@@ -63,7 +65,7 @@ export type Article = {
 };
 
 const categoryImage: Record<string, string> = {
-  ondernemen: vakmanschap, economie: hero, kmo: familie, "start-ups": internationaal, "tech-ai": innovatie,
+  ondernemen: vakmanschap, economie: hero, kmo: familie, "groei-strategie": internationaal, "start-ups": internationaal, "tech-ai": innovatie,
   finance: hero, vastgoed: zorg, arbeidsmarkt: familie, duurzaamheid: duurzaamheid, internationaal,
 };
 
@@ -82,7 +84,7 @@ export const editorial: Article[] = [
   },
   {
     slug: "familiebedrijf-draagt-stokje-over", title: "Een familiebedrijf draagt het stokje over: wat behoud je, wat verander je?",
-    category: "ondernemen", publishedAt: "2026-10-04", publishedTime: "07:45", image: familie, tags: ["Opvolging", "Familiebedrijf", "Limburg"], author: "Redactie", demo: true,
+    category: "ondernemen", kind: "achtergrond", publishedAt: "2026-10-04", publishedTime: "07:45", image: familie, tags: ["Opvolging", "Familiebedrijf", "Limburg"], author: "Redactie", demo: true,
     excerpt: "Drie generaties, één werkplaats en een overdracht die zorgvuldig werd voorbereid.",
     body: [
       "In een Limburgs familiebedrijf zijn vader en dochter al twee jaar bezig met de overdracht. Ze begonnen met een eenvoudige afspraak: elke maand één uur praten over wat blijft en wat mag veranderen.",
@@ -92,7 +94,7 @@ export const editorial: Article[] = [
   },
   {
     slug: "exporteurs-kijken-naar-nieuwe-markten", title: "Belgische exporteurs kijken verder dan de buurlanden",
-    category: "internationaal", publishedAt: "2026-10-03", publishedTime: "10:10", image: internationaal, tags: ["Export", "Internationaal"], author: "Redactie", demo: true,
+    category: "groei-strategie", kind: "achtergrond", publishedAt: "2026-10-03", publishedTime: "10:10", image: internationaal, tags: ["Export", "Internationaal"], author: "Redactie", demo: true,
     excerpt: "Waar groeien Belgische bedrijven over de grens en welke fouten maken ze bij hun eerste exportmarkt?",
     body: [
       "De meeste Belgische kmo's beginnen hun export bij de buren. Maar een groeiende groep kijkt verder: naar Scandinavië, Zuid-Europa en Oost-Europa, waar vraag en concurrentie anders liggen.",
@@ -102,7 +104,7 @@ export const editorial: Article[] = [
   },
   {
     slug: "duurzamer-produceren-zonder-marge-te-verliezen", title: "Duurzamer produceren zonder dat de marge verdwijnt",
-    category: "duurzaamheid", publishedAt: "2026-10-02", publishedTime: "09:00", image: duurzaamheid, tags: ["Energie", "Circulair", "Oost-Vlaanderen"], author: "Redactie", demo: true,
+    category: "duurzaamheid", kind: "achtergrond", publishedAt: "2026-10-02", publishedTime: "09:00", image: duurzaamheid, tags: ["Energie", "Circulair", "Oost-Vlaanderen"], author: "Redactie", demo: true,
     excerpt: "Een Oost-Vlaamse producent toont hoe energiebesparing en circulaire materialen samen een gezonde marge opleveren.",
     body: [
       "Een Oost-Vlaams productiebedrijf besliste twee jaar geleden om zijn energieverbruik stap voor stap te verlagen. Eerst kwamen de eenvoudige ingrepen: isolatie, warmteterugwinning en slimmere planning van de machines.",
@@ -112,7 +114,7 @@ export const editorial: Article[] = [
   },
 ];
 
-type Sample = { tags?: string[]; title: string; excerpt: string; category: string; publishedAt: string; time?: string; urgency?: Urgency; source: string; image?: string; video?: boolean };
+type Sample = { tags?: string[]; title: string; excerpt: string; category: string; publishedAt: string; time?: string; urgency?: Urgency; source: string; image?: string; video?: boolean; kind?: ArticleKind };
 
 /** Fictieve voorbeeldberichten — alleen voor de pilot. Bronnen en inhoud zijn verzonnen. */
 const sampleRaw: Sample[] = [
@@ -120,7 +122,7 @@ const sampleRaw: Sample[] = [
     excerpt: "Een nieuwe regeling wil investeringen in machines en digitalisering aantrekkelijker maken voor kleine bedrijven. Ondernemersorganisaties vragen vooral een eenvoudige aanvraagprocedure." },
   { tags: ["Brussel","Zorg"], title: "Zorgsector zoekt versnelling bij digitale patiëntendossiers", category: "tech-ai", publishedAt: "2026-10-05", time: "14:20", source: "Regio Ondernemen", image: zorg,
     excerpt: "Brusselse zorgaanbieders willen sneller werken met gedeelde dossiers, maar botsen op uiteenlopende systemen en strenge privacyregels." },
-  { title: "Europese regels voor verpakkingen worden strenger: wat verandert er?", category: "internationaal", publishedAt: "2026-10-05", time: "11:05", urgency: "hoog", source: "Pilot Wire",
+  { title: "Europese regels voor verpakkingen worden strenger: wat verandert er?", category: "internationaal", kind: "uitleg", publishedAt: "2026-10-05", time: "11:05", urgency: "hoog", source: "Pilot Wire",
     excerpt: "Nieuwe Europese verpakkingsregels dwingen producenten om materialen te herzien. Een overzicht van de belangrijkste deadlines en wat bedrijven nu al kunnen doen." },
   { title: "Debat over administratieve lasten: ondernemers vragen concrete stappen", category: "economie", publishedAt: "2026-10-04", time: "16:40", source: "Kmo Kompas", video: true, image: hero,
     excerpt: "In de Kamer botsten meerderheid en oppositie over de vereenvoudiging van administratieve verplichtingen. Ondernemers willen vooral duidelijke deadlines." },
@@ -130,21 +132,21 @@ const sampleRaw: Sample[] = [
     excerpt: "Jonge technologiebedrijven uit Vlaanderen sluiten financieringsrondes af. Investeerders wijzen op sterke technische teams en een groeiende klantenbasis." },
   { tags: ["Brussel","Horeca"], title: "Brusselse horeca zoekt oplossingen voor personeelstekort", category: "arbeidsmarkt", publishedAt: "2026-10-01", time: "15:10", source: "Regio Ondernemen", image: familie,
     excerpt: "Restaurants en hotels in de hoofdstad zoeken nieuwe manieren om medewerkers te vinden en te houden, van flexibele roosters tot interne opleidingen." },
-  { title: "Energieprijzen en industrie: wat de laatste cijfers betekenen", category: "economie", publishedAt: "2026-10-01", time: "08:50", source: "Pilot Wire", image: vakmanschap,
+  { title: "Energieprijzen en industrie: wat de laatste cijfers betekenen", category: "economie", kind: "achtergrond", publishedAt: "2026-10-01", time: "08:50", source: "Pilot Wire", image: vakmanschap,
     excerpt: "Een overzicht van de recente evolutie van de energiekosten en wat dat betekent voor energie-intensieve productiebedrijven in België." },
   { tags: ["Limburg","Opleiding"], title: "Vakmensen gezocht: opleidingscentra breiden aanbod uit", category: "arbeidsmarkt", publishedAt: "2026-09-30", time: "10:25", source: "Kmo Kompas", image: vakmanschap,
     excerpt: "Opleidingscentra voor technische beroepen verwachten meer cursisten en breiden hun aanbod uit, in nauwe samenwerking met bedrijven." },
   { tags: ["West-Vlaanderen","Circulair"], title: "Circulaire economie: Vlaamse producenten delen restmaterialen", category: "duurzaamheid", publishedAt: "2026-09-30", time: "17:00", source: "Pilot Wire", image: duurzaamheid,
     excerpt: "Een netwerk van Vlaamse producenten ruilt restmaterialen en bespaart zo grondstoffen en afvalkosten." },
-  { tags: ["Export","Antwerpen"], title: "Handelsmissie naar Scandinavië trekt recordaantal bedrijven", category: "internationaal", publishedAt: "2026-09-29", time: "09:40", source: "Regio Ondernemen", image: internationaal,
+  { tags: ["Export","Antwerpen"], title: "Handelsmissie naar Scandinavië trekt recordaantal bedrijven", category: "groei-strategie", publishedAt: "2026-09-29", time: "09:40", source: "Regio Ondernemen", image: internationaal,
     excerpt: "Een geplande handelsmissie naar Noord-Europa kent veel belangstelling van Belgische kmo's uit voeding, technologie en bouw." },
   { title: "Gesprek met een zaakvoerder over opvolging: 'Begin vroeg met praten'", category: "ondernemen", publishedAt: "2026-09-29", time: "18:15", source: "Pilot Wire", video: true, image: familie,
     excerpt: "Een zaakvoerder blikt terug op zijn overdracht en geeft tips aan collega's die binnenkort hetzelfde moeten doen." },
-  { tags: ["Antwerpen","Vastgoed"], title: "Bedrijfsvastgoed: vraag verschuift naar kleinere kantoren en logistieke ruimte", category: "vastgoed", publishedAt: "2026-10-05", time: "09:55", source: "Regio Ondernemen", image: zorg,
+  { tags: ["Antwerpen","Vastgoed"], title: "Bedrijfsvastgoed: vraag verschuift naar kleinere kantoren en logistieke ruimte", category: "vastgoed", kind: "achtergrond", publishedAt: "2026-10-05", time: "09:55", source: "Regio Ondernemen", image: zorg,
     excerpt: "Ondernemers zoeken minder vierkante meters kantoor en meer flexibele opslag- en productieruimte. Wat betekent dat voor huurprijzen en locatiekeuze?" },
-  { tags: ["Gent","KMO"], title: "Kmo's en financiering: waarmee houdt een bank rekening bij een kredietaanvraag?", category: "finance", publishedAt: "2026-10-04", time: "11:30", source: "Kmo Kompas", image: hero,
+  { tags: ["Gent","KMO"], title: "Kmo's en financiering: waarmee houdt een bank rekening bij een kredietaanvraag?", category: "finance", kind: "uitleg", publishedAt: "2026-10-04", time: "11:30", source: "Kmo Kompas", image: hero,
     excerpt: "Een overzicht van de elementen die kredietverstrekkers bekijken, en hoe een ondernemer zijn dossier sterker kan maken." },
-  { tags: ["Leuven","AI"], title: "AI-tools in de boekhouding: wat kan een kleine zaak er nu mee?", category: "tech-ai", publishedAt: "2026-10-03", time: "08:20", source: "Pilot Wire", image: innovatie,
+  { tags: ["Leuven","AI"], title: "AI-tools in de boekhouding: wat kan een kleine zaak er nu mee?", category: "tech-ai", kind: "uitleg", publishedAt: "2026-10-03", time: "08:20", source: "Pilot Wire", image: innovatie,
     excerpt: "Van het inlezen van facturen tot het opvolgen van betalingen: een nuchtere blik op wat slimme software vandaag wel en niet kan." },
 ];
 
@@ -157,7 +159,7 @@ const sampleRaw: Sample[] = [
  * Zonder `status` geldt het item als gepubliceerd; met een andere status dan "published" wordt het niet getoond.
  */
 export type RawFeedItem = Partial<ArticleRecord> & Partial<ArticleRecordAliases> & {
-  url?: string; source?: string; publishedAt?: string; excerpt?: string; video?: boolean; breaking?: boolean;
+  url?: string; source?: string; publishedAt?: string; excerpt?: string; video?: boolean; breaking?: boolean; kind?: string;
 };
 
 const slugify = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 70);
@@ -190,6 +192,7 @@ export function fromFeed(raw: RawFeedItem): Article | null {
   const articleText = raw.article_body ?? raw.article;
   const body = articleText ? articleText.split(/\n{2,}/).map((p) => stripHtml(p)).filter(Boolean) : [];
   const video = raw.video || !!raw.video_url;
+  const kind = parseKind(raw.article_type ?? raw.kind);
   return {
     slug: raw.slug ? slugify(raw.slug) : `${slugify(title)}-${hash(url)}`,
     title: stripHtml(title), excerpt, category, publishedAt: day,
@@ -198,6 +201,7 @@ export function fromFeed(raw: RawFeedItem): Article | null {
     urgency: parseUrgency(raw.urgency), status: "published",
     ...(time ? { publishedTime: time } : {}),
     ...(body.length ? { body } : {}),
+    ...(kind ? { kind } : {}),
     ...(video ? { video: true } : {}),
     ...(raw.video_url ? { videoUrl: raw.video_url } : {}),
     ...(raw.breaking_news || raw.breaking ? { breaking: true } : {}),
@@ -219,6 +223,7 @@ const sampleFeed: Article[] = sampleRaw.map((s) => ({
   source: { name: s.source, url: "https://example.com/" }, demo: true, urgency: s.urgency ?? "normaal", status: "published",
   ...(s.time ? { publishedTime: s.time } : {}),
   ...(s.tags ? { tags: s.tags } : {}),
+  ...(s.kind ? { kind: s.kind } : {}),
   ...(s.video ? { video: true } : {}),
 }));
 
@@ -237,6 +242,19 @@ export const categoryBySlug = (slug: string) => categories.find((c) => c.slug ==
 /** Artikels die bij een regio horen (via tags). */
 export const articlesInRegion = (label: string) => articles.filter((a) => a.tags?.some((t) => t.toLowerCase() === label.toLowerCase()));
 export const articlesIn = (category: string) => articles.filter((a) => a.category === category);
+/** Achtergrond- en uitlegstukken. */
+export const backgroundArticles = () => articles.filter((a) => a.kind === "achtergrond" || a.kind === "uitleg");
+/** Artikels van een segment ("Voor jouw type onderneming"), via de categorieën in de editie-configuratie. */
+export const articlesInSegment = (slug: string) => {
+  const seg = edition.segments.find((s) => s.slug === slug);
+  return seg ? articles.filter((a) => seg.categories.includes(a.category)) : [];
+};
+/** Leestijd in minuten — alleen voor artikels met volledige tekst. */
+export const readingMinutes = (a: Pick<Article, "body">) => {
+  if (!a.body?.length) return null;
+  const words = a.body.join(" ").split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+};
 
 const dateFmt = new Intl.DateTimeFormat(edition.language, { day: "numeric", month: "long", year: "numeric", timeZone: edition.timezone });
 const shortFmt = new Intl.DateTimeFormat(edition.language, { day: "numeric", month: "short", timeZone: edition.timezone });

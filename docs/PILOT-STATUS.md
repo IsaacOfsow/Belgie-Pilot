@@ -106,3 +106,13 @@ Contrast: navy op goud 9,2:1; grijze hulptekst op wit 5,8:1. Wit op `#E63946` ha
 6. Juridische teksten (privacy, cookies, voorwaarden, redactioneel beleid, bronnen) door jurist goedgekeurd.
 7. Productaanbod en prijzen van TV Media Partners; echte contactadressen; sociale kanalen.
 8. `pilot.enabled=false`, `initiative.approved` bevestigd, build + mobiele test + toegankelijkheidscheck.
+
+## Structuur van ondernemerstv.nl (oktober 2026)
+De site volgt nu de opbouw van https://ondernemerstv.nl/, met de huisstijl en inhoud van OndernemersTV Vlaanderen:
+- **Header:** marktstrook (Bel 20, Euro Stoxx 50, DAX, Brent-olie, EUR/USD — `edition.markets`; waarden blijven leeg tot er een databron is, er worden nooit koersen verzonnen), logo, menu **Nieuws · Achtergrond · Groei & strategie · Financiering · Video** (+ "Meer"), rode **▶ Kijk live**-knop.
+- **Homepage:** Laatste artikelen → Uitgelicht → Clips van de dag → Voor jouw type onderneming (tabs uit `edition.segments`) → Achtergrond → commerciële module.
+- **Footer (alle pagina's):** nieuwsbriefblok "Blijf op de hoogte", links Over ons · Contact · Adverteren, socials (alleen echte kanalen), juridische links, pilotregel.
+- **/achtergrond** (nieuw): artikels met `kind` = achtergrond of uitleg. In de feed: veld `article_type` (nieuws | achtergrond | uitleg).
+- **/live:** speler/pilotstatus, programma (demo), "Laatste nieuwsberichten", "Ook in de uitzending".
+- Nieuwe categorie **Groei & strategie**; **Finance** heet nu **Financiering**.
+- Bewust niet overgenomen: kijkcijfers bij clips (er zijn geen echte statistieken), echte marktkoersen. De eerdere live-strook, ticker, regionale module, "Vandaag voor ondernemers" en "Meest gelezen" staan niet meer op de homepage; de componenten bestaan nog in `src/components/site/modules.tsx`.

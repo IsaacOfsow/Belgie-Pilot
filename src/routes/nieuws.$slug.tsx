@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { articleBySlug, articles, categoryBySlug, formatDate, formatDateTime, PILOT_MODE, SHOW_DEMO_LABELS } from "@/content/news";
+import { articleBySlug, articles, categoryBySlug, formatDate, formatDateTime, PILOT_MODE, readingMinutes, SHOW_DEMO_LABELS } from "@/content/news";
 import { videos } from "@/content/video";
 import { edition } from "@/config/edition";
 import { AdSlot, AnyLink, ArticleCard, NewsletterForm, SectionBar } from "@/components/site/portal";
@@ -60,6 +60,7 @@ function Artikel() {
       <article>
         <header className="border-b bg-surface">
           <div className="container-x max-w-4xl py-12 md:py-16">
+            <p className="mb-4"><Link to="/nieuws" className="text-sm font-semibold text-primary hover:text-foreground">← Terug naar artikelen</Link></p>
             <nav aria-label="Kruimelpad" className="text-xs text-muted-foreground">
               <Link to="/" className="hover:text-foreground">Home</Link> / <Link to="/nieuws" className="hover:text-foreground">Nieuws</Link>
               {cat && <> / <AnyLink to="/categorie/$slug" params={{ slug: cat.slug }} className="hover:text-foreground">{cat.label}</AnyLink></>}
@@ -70,7 +71,7 @@ function Artikel() {
             </p>
             <h1 className="mt-4 text-4xl md:text-6xl">{a.title}</h1>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{a.excerpt}</p>
-            <p className="mt-6 text-sm text-muted-foreground"><time>{formatDateTime(a)}</time> · {a.source && !a.body ? `Bron: ${a.source.name}` : a.author ?? "Redactie"}</p>
+            <p className="mt-6 text-sm text-muted-foreground"><time>{formatDateTime(a)}</time> · {a.source && !a.body ? `Bron: ${a.source.name}` : a.author ?? "Redactie"}{readingMinutes(a) ? ` · ${readingMinutes(a)} min lezen` : ""}</p>
           </div>
         </header>
         <div className="container-x grid gap-12 py-12 lg:grid-cols-[minmax(0,1fr)_300px]">
@@ -116,7 +117,7 @@ function Artikel() {
 
             <div className="mt-12 border bg-surface p-6">
               <p className="eyebrow">Nieuwsbrief</p>
-              <h2 className="mt-2 text-2xl">Blijf op de hoogte van ondernemend {edition.region}</h2>
+              <h2 className="mt-2 text-2xl">Blijf op de hoogte</h2>
               <div className="mt-5"><NewsletterForm /></div>
             </div>
             <div className="mt-12"><AdSlot size="leaderboard" /></div>
