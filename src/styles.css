@@ -37,39 +37,67 @@
   --color-surface: var(--surface);
 }
 
-/* Kleuren afgeleid van uitblinkers.tv: warm zwart, champagne-goud en teal */
+/* Kleuren van ondernemerstv.nl: wit met navy header/footer, rood (live), goud (uitgelicht), groen (achtergrond) */
 :root {
   --radius: 4px;
-  --background: oklch(0.13 0.003 60);
-  --surface: oklch(0.17 0.004 60);
-  --navy: oklch(0.17 0.004 60);
-  --foreground: oklch(0.97 0.006 80);
-  --card: oklch(0.19 0.004 60);
-  --card-foreground: oklch(0.97 0.006 80);
-  --popover: oklch(0.17 0.004 60);
-  --popover-foreground: oklch(0.97 0.006 80);
-  --primary: oklch(0.755 0.09 82);
-  --primary-foreground: oklch(0.11 0.003 60);
-  --gold: oklch(0.755 0.09 82);
-  --teal: oklch(0.62 0.07 200);
-  --live: oklch(0.6 0.19 28);
-  --champagne: oklch(0.88 0.07 85);
-  --secondary: oklch(0.24 0.006 60);
-  --secondary-foreground: oklch(0.97 0.006 80);
-  --muted: oklch(0.21 0.005 60);
-  --muted-foreground: oklch(0.72 0.015 80);
-  --accent: oklch(0.26 0.01 70);
-  --accent-foreground: oklch(0.97 0.006 80);
-  --destructive: oklch(0.6 0.19 28);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.97 0.006 80 / 14%);
-  --input: oklch(0.97 0.006 80 / 22%);
-  --ring: oklch(0.755 0.09 82);
-  --overlay: linear-gradient(180deg, oklch(0.1 0.003 60 / 40%) 0%, oklch(0.1 0.003 60 / 85%) 75%, var(--background) 100%);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.15 0.02 260);
+  --surface: #eef4fb;
+  --navy: #0f2138;
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.02 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.02 260);
+  --primary: #0f2138;
+  --primary-foreground: oklch(0.99 0 0);
+  --gold: #c9a84c;
+  --teal: #0f6e56;
+  --live: #d64545;
+  --champagne: #e6d49a;
+  --eyebrow: #0f6e56;
+  --secondary: oklch(0.96 0.01 260);
+  --secondary-foreground: oklch(0.2 0.03 260);
+  --muted: oklch(0.96 0.01 260);
+  --muted-foreground: oklch(0.5 0.02 260);
+  --accent: oklch(0.96 0.01 260);
+  --accent-foreground: oklch(0.2 0.03 260);
+  --destructive: oklch(0.6 0.22 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.92 0.01 260);
+  --input: oklch(0.92 0.01 260);
+  --ring: oklch(0.7 0.04 260);
+  --mint-bg: #eef8f4;
+  --amber-bg: #fdf6ea;
+  --coral-bg: #fbeeec;
+  --overlay: linear-gradient(180deg, rgb(15 33 56 / 40%) 0%, rgb(15 33 56 / 85%) 75%, #0f2138 100%);
+}
+
+/* Donkere vlakken (navy header, footer, banners met beeld): zelfde tokens, omgedraaid naar licht-op-donker */
+.on-dark {
+  --background: #0f2138;
+  --foreground: oklch(0.98 0.004 260);
+  --surface: #14304f;
+  --card: #14304f;
+  --card-foreground: oklch(0.98 0.004 260);
+  --popover: #14304f;
+  --popover-foreground: oklch(0.98 0.004 260);
+  --primary: #c9a84c;
+  --primary-foreground: #0f2138;
+  --eyebrow: #c9a84c;
+  --secondary: #1a3a5e;
+  --secondary-foreground: oklch(0.98 0.004 260);
+  --muted: #1a3a5e;
+  --muted-foreground: oklch(0.869 0.022 252.894);
+  --accent: #1a3a5e;
+  --accent-foreground: oklch(0.98 0.004 260);
+  --border: oklch(1 0 0 / 16%);
+  --input: oklch(1 0 0 / 24%);
+  --ring: #c9a84c;
+  color: var(--foreground);
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * { border-color: var(--border); }
   html { scroll-behavior: smooth; }
   body {
     background-color: var(--color-background);
@@ -79,7 +107,7 @@
   }
   h1, h2 { font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.01em; line-height: 1.04; }
   h3, h4 { font-family: var(--font-head); font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; }
-  h1 em, h2 em { font-style: italic; color: var(--primary); }
+  h1 em, h2 em { font-style: italic; color: var(--eyebrow); }
   :focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
   ::selection { background: var(--primary); color: var(--primary-foreground); }
 }
@@ -90,7 +118,7 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--eyebrow);
 }
 
 @utility badge-live {
@@ -106,7 +134,7 @@
   font-size: 0.65rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
 }
 
-@utility rule-gold { border-top: 2px solid var(--primary); }
+@utility rule-gold { border-top: 2px solid var(--gold); }
 
 @utility overlay-dark { background: var(--overlay); }
 

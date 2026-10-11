@@ -15,7 +15,7 @@ function Live() {
     <>
       <PageTitle kicker="Live" title={<>Kijk <em>live</em></>} intro="Hier verschijnt de livestream zodra het eerste seizoen start." />
       <section className="container-x py-14">
-        <div className="relative aspect-video overflow-hidden border">
+        <div className="on-dark relative aspect-video overflow-hidden border">
           <img src={hero} alt="" className="h-full w-full object-cover" />
           <div className="overlay-dark absolute inset-0" />
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">

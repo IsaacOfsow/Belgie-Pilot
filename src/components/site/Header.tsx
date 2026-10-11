@@ -67,7 +67,7 @@ export function Header() {
   return (
     <>
       {/* Bovenbalk: live-status */}
-      <div className="border-b bg-surface">
+      <div className="on-dark border-b bg-navy">
         <div className="container-x flex h-10 items-center justify-between gap-4 text-xs">
           <p className="flex min-w-0 items-center gap-3">
             <Link to="/live" className="badge-live shrink-0"><span aria-hidden className="size-1.5 rounded-full bg-white" />Live</Link>
@@ -77,7 +77,7 @@ export function Header() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
+      <header className="on-dark sticky top-0 z-50 border-b bg-navy/95 backdrop-blur">
         {/* Servicerij */}
         <div className="container-x hidden h-9 items-center justify-between border-b text-[0.72rem] text-muted-foreground md:flex">
           <p className="flex items-center gap-5">

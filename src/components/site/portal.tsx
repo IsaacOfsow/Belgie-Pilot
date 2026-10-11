@@ -40,7 +40,7 @@ export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "ca
   const common = { to: "/nieuws/$slug", params: { slug: a.slug } } as const;
   if (variant === "lead") {
     return (
-      <Link {...common} className="group relative block min-h-[22rem] overflow-hidden border lg:min-h-[30rem]">
+      <Link {...common} className="on-dark group relative block min-h-[22rem] overflow-hidden border lg:min-h-[30rem]">
         <img src={a.image} alt="" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="overlay-dark absolute inset-0" />
         <div className="absolute inset-x-0 bottom-0 p-6 md:p-10">

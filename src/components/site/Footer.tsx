@@ -9,7 +9,7 @@ const lnk = "text-muted-foreground hover:text-foreground";
 
 export function Footer() {
   return (
-    <footer className="mt-8 border-t-2 border-primary bg-surface">
+    <footer className="on-dark mt-8 border-t-2 border-primary bg-navy">
       <div className="container-x grid gap-10 border-b py-12 md:grid-cols-2 md:items-center">
         <div>
           <p className="eyebrow">Elke week het ondernemersnieuws</p>
