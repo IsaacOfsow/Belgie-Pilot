@@ -1,8 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { edition } from "@/config/edition";
 import { useState, type FormEvent, type ReactNode } from "react";
-import { categoryBySlug, formatShort, formatStamp, readingMinutes, SHOW_DEMO_LABELS, type Article } from "@/content/news";
-import { kindLabels } from "@/content/cms";
+import { categoryBySlug, formatShort, SHOW_DEMO_LABELS, type Article } from "@/content/news";
 import { site } from "@/content/site";
 import { btn } from "./ui";
 import { cn } from "@/lib/utils";
@@ -16,8 +14,7 @@ export const AnyLink = Link as unknown as (props: {
 /** Sectiekop met gouden lijn en optionele "alles bekijken"-link. */
 export function SectionBar({ title, kicker, to, label }: { title: ReactNode; kicker?: string; to?: string; label?: string }) {
   return (
-    <div className="relative flex items-end justify-between gap-6 border-b pb-3">
-      <span aria-hidden className="absolute -bottom-px left-0 h-[3px] w-16 bg-gold" />
+    <div className="flex items-end justify-between gap-6 border-b border-primary/70 pb-3">
       <div>
         {kicker && <p className="eyebrow">{kicker}</p>}
         <h2 className="mt-1 text-3xl md:text-4xl">{title}</h2>
@@ -30,29 +27,20 @@ export function SectionBar({ title, kicker, to, label }: { title: ReactNode; kic
 export function CategoryTag({ slug }: { slug: string }) {
   const c = categoryBySlug(slug);
   if (!c) return null;
-  return <span className="eyebrow inline-flex items-center gap-2 !text-[0.65rem]"><span aria-hidden className="h-3 w-[3px] bg-gold" />{c.label}</span>;
+  return <span className="eyebrow !text-[0.65rem]">{c.label}</span>;
 }
-
-/** "Achtergrond" / "Uitleg" — alleen voor stukken die geen gewoon nieuwsbericht zijn. */
-function KindTag({ a }: { a: Pick<Article, "kind"> }) {
-  if (!a.kind || a.kind === "nieuws") return null;
-  return <span className="border border-foreground/30 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.14em]">{kindLabels[a.kind]}</span>;
-}
-
-/** Auteur/bron · datum · leestijd (leestijd alleen bij artikels met volledige tekst). */
-const metaLine = (a: Article) => [a.author ?? a.source?.name, formatShort(a.publishedAt), readingMinutes(a) ? `${readingMinutes(a)} min` : null].filter(Boolean).join(" · ");
 
 function DemoTag() {
   if (!SHOW_DEMO_LABELS) return null;
   return <span className="border border-primary/50 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-primary">Demo</span>;
 }
 
-/** Nieuwskaart. variant: lead (hoofdbericht, tekst over beeld), major (grote kaart), card (standaard), thumb (beeld links), row (compact kopregel). */
-export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "card" | "major" | "lead" | "row" | "thumb" }) {
+/** Nieuwskaart. variant: card (standaard), lead (groot, tekst over beeld), row (compact, zonder beeld), thumb (beeld links). */
+export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "card" | "lead" | "row" | "thumb" }) {
   const common = { to: "/nieuws/$slug", params: { slug: a.slug } } as const;
   if (variant === "lead") {
     return (
-      <Link {...common} className="theme-navy group relative block min-h-[22rem] overflow-hidden border lg:min-h-[30rem]">
+      <Link {...common} className="group relative block min-h-[22rem] overflow-hidden border lg:min-h-[30rem]">
         <img src={a.image} alt="" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="overlay-dark absolute inset-0" />
         <div className="absolute inset-x-0 bottom-0 p-6 md:p-10">
@@ -64,26 +52,10 @@ export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "ca
       </Link>
     );
   }
-  if (variant === "major") {
-    return (
-      <Link {...common} className="group block">
-        <div className="relative aspect-[16/9] overflow-hidden border">
-          <img src={a.image} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-          {a.video && <span className="badge-live absolute left-3 top-3">Video</span>}
-        </div>
-        <div className="mt-4">
-          <div className="flex items-center gap-3"><CategoryTag slug={a.category} /><KindTag a={a} />{a.demo && <DemoTag />}</div>
-          <h3 className="mt-2 font-serif text-2xl font-normal leading-[1.1] group-hover:underline md:text-3xl">{a.title}</h3>
-          <p className="mt-2 line-clamp-3 leading-relaxed text-muted-foreground">{a.excerpt}</p>
-          <p className="mt-3 text-xs text-muted-foreground">{a.author ?? a.source?.name} · {formatStamp(a)}</p>
-        </div>
-      </Link>
-    );
-  }
   if (variant === "row") {
     return (
       <Link {...common} className="group flex gap-4 py-4">
-        <span className="w-14 shrink-0 pt-0.5 text-xs font-semibold tabular-nums tracking-wide text-primary">{formatStamp(a)}</span>
+        <span className="w-14 shrink-0 pt-0.5 text-xs font-semibold uppercase tracking-wide text-primary">{formatShort(a.publishedAt)}</span>
         <span className="min-w-0">
           <CategoryTag slug={a.category} />
           <span className="mt-1 block font-head text-base font-bold leading-snug group-hover:text-primary">{a.title}</span>
@@ -110,10 +82,10 @@ export function ArticleCard({ a, variant = "card" }: { a: Article; variant?: "ca
         {a.video && <span className="badge-live absolute left-3 top-3">Video</span>}
       </div>
       <div className="p-5">
-        <div className="flex items-center gap-3"><CategoryTag slug={a.category} /><KindTag a={a} />{a.demo && <DemoTag />}</div>
+        <div className="flex items-center gap-3"><CategoryTag slug={a.category} />{a.demo && <DemoTag />}</div>
         <h3 className="mt-2 text-lg group-hover:text-primary md:text-xl">{a.title}</h3>
         <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">{a.excerpt}</p>
-        <p className="mt-4 text-xs text-muted-foreground">{metaLine(a)}</p>
+        <p className="mt-4 text-xs text-muted-foreground">{a.author ?? a.source?.name} · {formatShort(a.publishedAt)}</p>
       </div>
     </Link>
   );
@@ -137,7 +109,7 @@ export function AdSlot({ size = "leaderboard", ad, className }: { size?: "leader
       ) : (
         <Link to="/adverteren" className={cn("flex flex-col items-center justify-center gap-1 border border-dashed border-primary/40 bg-surface px-4 py-4 text-center transition-colors hover:border-primary", box)}>
           <span className="font-head text-sm font-bold">Hier kan uw advertentie staan</span>
-          <span className="text-xs text-muted-foreground">Zichtbaar bij ondernemers in {edition.region} — prijs op aanvraag</span>
+          <span className="text-xs text-muted-foreground">Bereik Belgische ondernemers — vanaf een klein bedrag</span>
           <span className="mt-1 text-xs font-bold uppercase tracking-[0.14em] text-primary">Adverteren →</span>
         </Link>
       )}
@@ -162,7 +134,7 @@ export function NewsletterForm({ compact }: { compact?: boolean }) {
     <form noValidate onSubmit={submit} className={cn("flex flex-col gap-3", compact ? "" : "sm:flex-row")}>
       <div className="flex-1">
         <label htmlFor="nl-email" className="sr-only">E-mailadres</label>
-        <input id="nl-email" name="email" type="email" placeholder="uw@email.be" aria-invalid={!!error} className="w-full border border-input bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground aria-[invalid=true]:border-destructive" />
+        <input id="nl-email" name="email" type="email" placeholder="uw@email.be" aria-invalid={!!error} className="w-full border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground aria-[invalid=true]:border-destructive" />
         {error && <p className="mt-1 text-sm text-destructive">{error}</p>}
       </div>
       <button type="submit" className={btn()}>Aanmelden</button>
